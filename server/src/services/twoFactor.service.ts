@@ -6,7 +6,7 @@ import QRCode from "qrcode";
 export const generateTwoFactorSecret = async (userId: string) => {
   const secret = speakeasy.generateSecret({
     length: 20,
-    name: process.env["2FA_ISSUER"],
+    name: process.env["TWOFA_ISSUER"],
   });
 
   const user = await User.findById(userId);

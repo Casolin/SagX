@@ -137,7 +137,7 @@ export default function MissionCard({ mission, refresh }: Props) {
           <div className="flex items-center gap-2">
             <button
               onClick={handleEdit}
-              className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition cursor-pointer"
+              className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition cursor-pointer"
             >
               <SlidersHorizontal size={18} />
             </button>
@@ -149,7 +149,7 @@ export default function MissionCard({ mission, refresh }: Props) {
                   setOpenDelete(true);
                 }}
                 disabled={deleting}
-                className="opacity-0 group-hover:opacity-100 transition text-red-500 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 disabled:opacity-50 cursor-pointer"
+                className="transition text-red-500 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 disabled:opacity-50 cursor-pointer"
               >
                 <Trash2 size={18} />
               </button>
@@ -157,7 +157,7 @@ export default function MissionCard({ mission, refresh }: Props) {
             {!isTechnician && (
               <button
                 onClick={handleGenerateReport}
-                className="p-2 rounded-lg text-orange-600 hover:bg-orange-50 opacity-0 group-hover:opacity-100 transition cursor-pointer"
+                className="p-2 rounded-lg text-orange-600 hover:bg-orange-50 transition cursor-pointer"
               >
                 <File size={18} />
               </button>

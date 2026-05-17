@@ -30,15 +30,11 @@ export default function UserCard({ user, onEdit, onDelete }: Props) {
   const handleDelete = async () => {
     try {
       setLoading(true);
-
       await onDelete(user._id);
-
       notify.info("User deleted successfully");
-
       setOpen(false);
     } catch (err) {
       console.error(err);
-
       notify.error("Failed to delete user");
     } finally {
       setLoading(false);
@@ -50,27 +46,27 @@ export default function UserCard({ user, onEdit, onDelete }: Props) {
       {/* CARD */}
       <div
         className="
-          w-full flex items-center justify-between
+          w-full flex flex-col sm:flex-row items-center justify-between
           bg-white border border-gray-100
-          rounded-2xl p-5 shadow-sm
+          rounded-2xl p-4 sm:p-5 shadow-sm
           hover:shadow-md transition
         "
       >
-        {/* LEFT */}
-        <div className="flex items-center gap-4">
+        {/* LEFT: Avatar + Info */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-4 w-full sm:w-auto">
           <img
             src={user.avatar}
-            className="w-14 h-14 rounded-full border object-cover"
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border object-cover"
           />
 
-          <div>
+          <div className="text-center sm:text-left flex-1">
             <h3 className="font-semibold text-gray-900">
               {user.firstName} {user.lastName}
             </h3>
 
-            <p className="text-sm text-gray-500">{user.email}</p>
+            <p className="text-sm text-gray-500 truncate">{user.email}</p>
 
-            <div className="flex gap-2 mt-2">
+            <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-2">
               <span className={`text-xs px-3 py-1 rounded-full ${roleColor}`}>
                 {user.role}
               </span>
@@ -83,13 +79,14 @@ export default function UserCard({ user, onEdit, onDelete }: Props) {
         </div>
 
         {/* ACTIONS */}
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 mt-3 sm:mt-0">
           <button
             onClick={() => onEdit(user)}
             className="
               bg-indigo-600 hover:bg-indigo-700
               text-white px-4 py-2 rounded-xl
               text-sm font-medium transition cursor-pointer
+              w-full sm:w-auto
             "
           >
             Edit
@@ -101,6 +98,7 @@ export default function UserCard({ user, onEdit, onDelete }: Props) {
               bg-red-500 hover:bg-red-600
               text-white px-4 py-2 rounded-xl
               text-sm font-medium transition cursor-pointer
+              w-full sm:w-auto
             "
           >
             Delete

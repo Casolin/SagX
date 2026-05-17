@@ -130,7 +130,7 @@ export default function MachineCard({ machine, refresh }: Props) {
                 e.stopPropagation();
                 setOpenEdit(true);
               }}
-              className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition cursor-pointer"
+              className="p-2 rounded-lg text-blue-600 hover:bg-blue-50  transition cursor-pointer"
             >
               <SlidersHorizontal size={18} />
             </button>
@@ -142,7 +142,7 @@ export default function MachineCard({ machine, refresh }: Props) {
                 e.stopPropagation();
                 setOpenDelete(true);
               }}
-              className="p-2 rounded-lg text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition cursor-pointer"
+              className="p-2 rounded-lg text-red-500 hover:bg-red-50 transition cursor-pointer"
             >
               <Trash2 size={18} />
             </button>

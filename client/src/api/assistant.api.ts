@@ -5,7 +5,7 @@ import type {
 } from "../types/global.types";
 
 export const sendAssistantMessage = async (message: string) => {
-  const res = await api.post("/assistant", { message });
+  const res = await api.post("/api/ai/assistant", { message });
   return res.data;
 };
 

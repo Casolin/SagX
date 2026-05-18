@@ -17,3 +17,14 @@ export const createMaterial = async (
   const res = await api.post<Material>("/api/materials", data);
   return res.data;
 };
+
+export const updateMaterialStock = async (
+  id: string,
+  quantity: number,
+): Promise<Material> => {
+  const res = await api.patch(`/api/materials/${id}/stock`, {
+    quantity,
+  });
+
+  return res.data.data;
+};

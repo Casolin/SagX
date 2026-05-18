@@ -3,6 +3,7 @@ import {
   createMaterial,
   getAllMaterials,
   getMaterialById,
+  updateMaterialStock,
 } from "./material.service.js";
 
 import { createActivityLog } from "../logs/activitylog.service.js";
@@ -66,6 +67,40 @@ export const getOne = async (req: Request, res: Response) => {
     });
   } catch (err: any) {
     res.status(err.statusCode || 404).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const updateStock = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid material id",
+      });
+    }
+
+    const { quantity } = req.body;
+
+    if (typeof quantity !== "number") {
+      return res.status(400).json({
+        success: false,
+        message: "Quantity must be a number",
+      });
+    }
+
+    const material = await updateMaterialStock(id, quantity);
+
+    res.json({
+      success: true,
+      data: material,
+    });
+  } catch (err: any) {
+    res.status(err.statusCode || 400).json({
       success: false,
       message: err.message,
     });

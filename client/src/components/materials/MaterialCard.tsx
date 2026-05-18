@@ -1,4 +1,6 @@
+import { useState } from "react";
 import type { Material } from "../../types/global.types";
+import { updateMaterialStock } from "../../api/material.api";
 
 interface Props {
   material: Material;
@@ -7,6 +9,26 @@ interface Props {
 const MaterialCard = ({ material }: Props) => {
   const failureTypes = material.failureTypes ?? [];
   const hasFailures = failureTypes.length > 0;
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [quantity, setQuantity] = useState(material.quantity);
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+
+      const updated = await updateMaterialStock(material._id, quantity);
+
+      setQuantity(updated.quantity);
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update stock");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="group bg-white border border-gray-200 rounded-2xl p-5 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
@@ -24,10 +46,44 @@ const MaterialCard = ({ material }: Props) => {
           </p>
         </div>
 
-        {/* Quantity badge */}
-        <span className="shrink-0 text-xs font-medium bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full border border-gray-200">
-          {material.quantity} {material.unit}
-        </span>
+        {/* Quantity (editable) */}
+        <div className="shrink-0 flex items-center gap-2">
+          {!isEditing ? (
+            <span
+              onClick={() => setIsEditing(true)}
+              className="cursor-pointer text-xs font-medium bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full border border-gray-200 hover:bg-gray-200 transition"
+            >
+              {quantity} {material.unit}
+            </span>
+          ) : (
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                className="w-20 px-2 py-1 text-xs border rounded-md"
+              />
+
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="text-xs bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 cursor-pointer"
+              >
+                {loading ? "..." : "Save"}
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsEditing(false);
+                  setQuantity(material.quantity);
+                }}
+                className="text-xs text-gray-500 cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Failure tags */}

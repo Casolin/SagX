@@ -6,6 +6,10 @@ import App from "./App.tsx";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Buffer } from "buffer";
+
+window.global = window;
+window.Buffer = Buffer;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

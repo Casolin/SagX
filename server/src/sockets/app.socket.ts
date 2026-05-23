@@ -137,6 +137,84 @@ export const initAppSocket = (io: Server) => {
     });
 
     // =========================
+    // CALL OFFER
+    // =========================
+    socket.on(SOCKET_EVENTS.CALL_OFFER, (data) => {
+      try {
+        const { to, offer, caller } = data;
+
+        if (!to || !offer) return;
+
+        io.to(String(to)).emit(SOCKET_EVENTS.CALL_OFFER, {
+          offer,
+          caller,
+        });
+      } catch (err) {
+        console.error("CALL_OFFER ERROR:", err);
+      }
+    });
+
+    // =========================
+    // CALL ANSWER
+    // =========================
+    socket.on(SOCKET_EVENTS.CALL_ANSWER, (data) => {
+      try {
+        const { to, answer } = data;
+
+        if (!to || !answer) return;
+
+        io.to(String(to)).emit(SOCKET_EVENTS.CALL_ANSWER, {
+          answer,
+        });
+      } catch (err) {
+        console.error("CALL_ANSWER ERROR:", err);
+      }
+    });
+
+    // =========================
+    // ICE CANDIDATE
+    // =========================
+    socket.on(SOCKET_EVENTS.CALL_ICE_CANDIDATE, (data) => {
+      try {
+        const { to, candidate } = data;
+
+        if (!to || !candidate) return;
+
+        io.to(String(to)).emit(SOCKET_EVENTS.CALL_ICE_CANDIDATE, {
+          candidate,
+        });
+      } catch (err) {
+        console.error("CALL_ICE_CANDIDATE ERROR:", err);
+      }
+    });
+
+    // =========================
+    // CALL REJECT
+    // =========================
+    socket.on(SOCKET_EVENTS.CALL_REJECT, ({ to }) => {
+      try {
+        if (!to) return;
+
+        io.to(String(to)).emit(SOCKET_EVENTS.CALL_REJECT);
+      } catch (err) {
+        console.error("CALL_REJECT ERROR:", err);
+      }
+    });
+
+    // =========================
+    // CALL END
+    // =========================
+    socket.on(SOCKET_EVENTS.CALL_END, ({ to }) => {
+      try {
+        if (!to) return;
+
+        io.to(String(to)).emit(SOCKET_EVENTS.CALL_END);
+      } catch (err) {
+        console.error("CALL_END ERROR:", err);
+      }
+    });
+
+    // =========================
     // DISCONNECT
     // =========================
     socket.on("disconnect", () => {

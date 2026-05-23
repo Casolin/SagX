@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "../services/socket.events";
 import { useNotificationStore } from "../utils/notification.store";
+import { useCallStore } from "../utils/call.store";
 
 let socket: Socket | null = null;
 
@@ -16,8 +17,12 @@ export const initSocket = (userId: string) => {
     reconnectionAttempts: 5,
   });
 
-  socket.on("connect", () => {
-    console.log("✅ Socket connected:", socket?.id);
+  socket!.on("connect", () => {
+    console.log("✅ Socket connected:", socket!.id);
+
+    socket!.emit("join_room", userId);
+
+    useCallStore.getState().bindSocket(socket!);
   });
 
   socket.emit("join_room", userId);
@@ -80,6 +85,32 @@ export const initSocket = (userId: string) => {
 
   socket.on(SOCKET_EVENTS.FRIEND_REMOVE, (data) => {
     console.log("Friend Removed:", data);
+  });
+
+  socket.on(SOCKET_EVENTS.CALL_ANSWER, (data) => {
+    console.log("Call Answered:", data);
+  });
+
+  socket.on(SOCKET_EVENTS.CALL_REJECT, () => {
+    console.log("Call Rejected");
+
+    const last = sessionStorage.getItem("last_route_before_call");
+    sessionStorage.removeItem("last_route_before_call");
+
+    window.location.href = last || "/chat";
+  });
+
+  socket.on(SOCKET_EVENTS.CALL_END, () => {
+    console.log("Call Ended");
+
+    const last = sessionStorage.getItem("last_route_before_call");
+    sessionStorage.removeItem("last_route_before_call");
+
+    window.location.href = last || "/chat";
+  });
+
+  socket.on(SOCKET_EVENTS.CALL_ICE_CANDIDATE, (data) => {
+    console.log("ICE Candidate:", data);
   });
 
   socket.on("disconnect", (reason) => {

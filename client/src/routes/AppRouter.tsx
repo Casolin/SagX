@@ -27,6 +27,7 @@ import AddUserPage from "../pages/AddUserPage";
 import MaterialsPage from "../pages/MaterialsPage";
 import { AddMaterialsPage } from "../pages/AddMaterialsPage";
 import CreateMachinePage from "../pages/CreateMachinePage";
+import { CallPage } from "../pages/CallPage";
 
 export const AppRouter = () => {
   return (
@@ -160,6 +161,15 @@ export const AppRouter = () => {
           element={
             <RoleRoute allowedRoles={["ADMIN", "MANAGER", "TECHNICIAN"]}>
               <ChatPage />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/call"
+          element={
+            <RoleRoute allowedRoles={["ADMIN", "MANAGER", "TECHNICIAN"]}>
+              <CallPage />
             </RoleRoute>
           }
         />

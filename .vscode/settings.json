@@ -9,6 +9,8 @@
     "activitylog",
     "ailogo",
     "dotenv",
+    "mailersend",
+    "mlsender",
     "sagemcom",
     "topg",
     "TWOFA"

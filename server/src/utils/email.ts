@@ -1,60 +1,35 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  host: "smtp.mailersend.net",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.MAILERSEND_SMTP_USER,
+    pass: process.env.MAILERSEND_SMTP_PASS,
   },
 });
 
-console.log("==== EMAIL DEBUG ====");
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
-console.log("EMAIL_PASS length:", process.env.EMAIL_PASS?.length);
-console.log("=====================");
-
 export const sendEmail = async (to: string, link: string) => {
   try {
-    console.log("EMAIL USER:", process.env.EMAIL_USER);
-    console.log("EMAIL PASS EXISTS:", !!process.env.EMAIL_PASS);
-
     await transporter.sendMail({
-      from: `"Support Team" <${process.env.EMAIL_USER}>`,
+      from: `"SagX Support" <no-reply@test-zkq340e35n3gd796.mlsender.net>`,
       to,
       subject: "Password Reset Request",
       html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+        <div style="font-family: Arial;">
           <h2>Password Reset</h2>
-
-          <p>You requested to reset your password.</p>
-          <p>Click the button below to reset it:</p>
-
-          <a href="${link}" 
-             style="
-              display:inline-block;
-              padding:10px 20px;
-              background:#4f46e5;
-              color:#fff;
-              text-decoration:none;
-              border-radius:5px;
-              margin-top:10px;
-             ">
+          <p>Click below to reset your password:</p>
+          <a href="${link}" style="padding:10px 20px;background:#4f46e5;color:white;text-decoration:none;">
             Reset Password
           </a>
-
-          <p style="margin-top:20px; font-size:12px; color:#666;">
-            This link will expire in 30 minutes.
-          </p>
         </div>
       `,
     });
 
     console.log("EMAIL SENT SUCCESS");
-  } catch (error) {
-    console.error("EMAIL FAILED FULL ERROR:", error);
-    throw error;
+  } catch (err) {
+    console.error("EMAIL FAILED:", err);
+    throw err;
   }
 };

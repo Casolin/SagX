@@ -23,6 +23,8 @@ export default function ForgotPassword() {
       const error = err as AxiosError<{ message: string }>;
 
       toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 

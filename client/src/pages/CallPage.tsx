@@ -61,6 +61,35 @@ export const CallPage = () => {
   useEffect(() => {
     if (!remoteStream) return;
 
+    const attachStream = async () => {
+      if (!videoRef.current) return;
+
+      if (videoRef.current.srcObject !== remoteStream) {
+        videoRef.current.srcObject = remoteStream;
+      }
+
+      try {
+        await videoRef.current.play();
+      } catch (err) {
+        // @ts-expect-error chat
+        console.log(err.message);
+      }
+    };
+
+    setTimeout(() => {
+      attachStream();
+    }, 100);
+
+    window.addEventListener("focus", attachStream);
+
+    return () => {
+      window.removeEventListener("focus", attachStream);
+    };
+  }, [remoteStream, isMinimized]);
+
+  useEffect(() => {
+    if (!remoteStream) return;
+
     // VIDEO
     if (videoRef.current) {
       videoRef.current.srcObject = remoteStream;

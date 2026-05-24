@@ -88,15 +88,19 @@ export const CallPage = () => {
 
   useEffect(() => {
     if (!remoteStream) return;
-
     if (!audioRef.current) return;
 
-    audioRef.current.srcObject = remoteStream;
-    audioRef.current.muted = false;
-    audioRef.current.volume = 1;
+    const audio = audioRef.current;
 
-    audioRef.current.play().catch(() => {});
-  }, [remoteStream, isMinimized]);
+    if (audio.srcObject !== remoteStream) {
+      audio.srcObject = remoteStream;
+    }
+
+    audio.muted = false;
+    audio.volume = 1;
+
+    audio.play().catch(() => {});
+  }, [remoteStream]);
 
   useEffect(() => {
     if (isIncoming && !isInCall) startRingtone();

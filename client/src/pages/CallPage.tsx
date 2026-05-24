@@ -87,22 +87,6 @@ export const CallPage = () => {
   }, [remoteStream, isMinimized]);
 
   useEffect(() => {
-    if (!remoteStream) return;
-    if (!audioRef.current) return;
-
-    const audio = audioRef.current;
-
-    if (audio.srcObject !== remoteStream) {
-      audio.srcObject = remoteStream;
-    }
-
-    audio.muted = false;
-    audio.volume = 1;
-
-    audio.play().catch(() => {});
-  }, [remoteStream]);
-
-  useEffect(() => {
     if (isIncoming && !isInCall) startRingtone();
     else stopRingtone();
     return () => stopRingtone();
@@ -113,6 +97,30 @@ export const CallPage = () => {
     else stopCallingTone();
     return () => stopCallingTone();
   }, [isCalling, isIncoming, isInCall]);
+
+  useEffect(() => {
+    if (!remoteStream || !audioRef.current) return;
+
+    const audio = audioRef.current;
+
+    audio.srcObject = remoteStream;
+    audio.muted = false;
+    audio.volume = 1;
+
+    const playAudio = () => {
+      audio.play().catch(() => {});
+    };
+
+    playAudio();
+
+    window.addEventListener("focus", playAudio);
+    document.addEventListener("visibilitychange", playAudio);
+
+    return () => {
+      window.removeEventListener("focus", playAudio);
+      document.removeEventListener("visibilitychange", playAudio);
+    };
+  }, [remoteStream]);
 
   if (isMinimized && isInCall) {
     return (

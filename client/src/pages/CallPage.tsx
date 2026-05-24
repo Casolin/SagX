@@ -11,7 +11,6 @@ import {
   Maximize2,
   ScreenShare,
   MonitorOff,
-  Video,
   Maximize,
   Minimize,
 } from "lucide-react";
@@ -33,11 +32,9 @@ export const CallPage = () => {
   const endCall = useCallStore((s) => s.endCall);
 
   const remoteStream = useCallStore((s) => s.remoteStream);
-  const stream = useCallStore((s) => s.stream);
 
   const toggleMute = useCallStore((s) => s.toggleMute);
   const toggleScreenShare = useCallStore((s) => s.toggleScreenShare);
-  const toggleCamera = useCallStore((s) => s.toggleCamera);
 
   const isMuted = useCallStore((s) => s.isMuted);
   const isScreenSharing = useCallStore((s) => s.isScreenSharing);
@@ -77,13 +74,6 @@ export const CallPage = () => {
     else stopCallingTone();
     return () => stopCallingTone();
   }, [isCalling, isIncoming, isInCall]);
-
-  useEffect(() => {
-    if (isInCall && stream) {
-      const videoTrack = stream.getVideoTracks()[0];
-      if (videoTrack) videoTrack.enabled = false;
-    }
-  }, [isInCall, isMinimized, stream]);
 
   if (isMinimized && isInCall) {
     return (
@@ -156,13 +146,6 @@ export const CallPage = () => {
             ) : (
               <ScreenShare size={18} />
             )}
-          </button>
-
-          <button
-            onClick={toggleCamera}
-            className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition cursor-pointer"
-          >
-            <Video size={18} />
           </button>
 
           <button

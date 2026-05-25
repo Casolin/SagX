@@ -212,7 +212,7 @@ export default function CreateAlertPage() {
             <button
               type="button"
               onClick={() => navigate("/alerts")}
-              className="px-5 py-3 rounded-2xl border border-zinc-300 hover:bg-zinc-50 transition"
+              className="px-5 py-3 rounded-2xl border border-zinc-300 hover:bg-zinc-50 transition cursor-pointer"
             >
               Cancel
             </button>
@@ -220,7 +220,7 @@ export default function CreateAlertPage() {
             <button
               disabled={loading}
               type="submit"
-              className="px-6 py-3 rounded-2xl bg-linear-to-r from-orange-500 to-orange-600 text-white font-medium hover:opacity-90 disabled:opacity-50 transition shadow-sm"
+              className="px-6 py-3 rounded-2xl bg-linear-to-r from-orange-500 to-orange-600 text-white font-medium hover:opacity-90 disabled:opacity-50 transition shadow-sm cursor-pointer"
             >
               {loading ? "Creating..." : "Create Alert"}
             </button>

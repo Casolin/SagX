@@ -169,7 +169,11 @@ const MessageBubble = ({ message, own, setMessages }: Props) => {
       );
     }
 
-    return <p className="text-sm word-break-words">{message.content}</p>;
+    return (
+      <p className="text-sm wrap-break-words whitespace-pre-wrap">
+        {message.content}
+      </p>
+    );
   };
 
   return (

@@ -54,8 +54,50 @@ export const CallPage = () => {
 
   const [isVideoFull, setIsVideoFull] = useState(false);
 
+  const [dragPosition, setDragPosition] = useState({
+    x: window.innerWidth - 260,
+    y: window.innerHeight - 120,
+  });
+
+  const dragging = useRef(false);
+
+  const offset = useRef({
+    x: 0,
+    y: 0,
+  });
+
   const toggleVideoFull = () => {
     setIsVideoFull((prev) => !prev);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    dragging.current = true;
+
+    offset.current = {
+      x: e.clientX - dragPosition.x,
+      y: e.clientY - dragPosition.y,
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!dragging.current) return;
+
+    setDragPosition({
+      x: e.clientX - offset.current.x,
+      y: e.clientY - offset.current.y,
+    });
+  };
+
+  const handleMouseUp = () => {
+    dragging.current = false;
+
+    document.removeEventListener("mousemove", handleMouseMove);
+
+    document.removeEventListener("mouseup", handleMouseUp);
   };
 
   useEffect(() => {
@@ -126,7 +168,14 @@ export const CallPage = () => {
 
       {/* MINIMIZED */}
       {isMinimized && isInCall ? (
-        <div className="fixed bottom-5 right-5 z-50">
+        <div
+          onMouseDown={handleMouseDown}
+          style={{
+            left: dragPosition.x,
+            top: dragPosition.y,
+          }}
+          className="fixed z-50 cursor-move select-none"
+        >
           <div className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 text-white px-4 py-3 rounded-2xl flex items-center gap-3 shadow-xl">
             <PhoneCall size={16} className="opacity-80" />
 

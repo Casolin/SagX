@@ -266,6 +266,7 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     const screenStream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
+      audio: true,
     });
 
     const screenTrack = screenStream.getVideoTracks()[0];

@@ -39,7 +39,9 @@ export const refreshToken = async () => {
     localStorage.setItem("accessToken", newToken);
   }
 
-  return res.data;
+  return {
+    accessToken: newToken,
+  };
 };
 
 export const forgotPassword = async (data: ForgotPasswordDto) => {

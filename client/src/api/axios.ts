@@ -1,3 +1,4 @@
+// axios.ts
 import axios, { AxiosError } from "axios";
 import { refreshToken } from "./auth.api";
 import type { InternalAxiosRequestConfig } from "axios";
@@ -15,7 +16,8 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
 
-  if (token && config.headers) {
+  if (token) {
+    config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
 
@@ -27,19 +29,27 @@ let failedQueue: QueueItem[] = [];
 
 const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
-    if (error) prom.reject(error);
-    else prom.resolve(token);
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
   });
 
   failedQueue = [];
 };
 
 api.interceptors.response.use(
-  (res) => res,
+  (response) => response,
+
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
+
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -48,7 +58,10 @@ api.interceptors.response.use(
         return new Promise<string | null>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {
+          originalRequest.headers = originalRequest.headers || {};
+
           originalRequest.headers.Authorization = `Bearer ${token}`;
+
           return api(originalRequest);
         });
       }
@@ -57,11 +70,20 @@ api.interceptors.response.use(
 
       try {
         const res = await refreshToken();
+
+        // IMPORTANT FIX
         const newAccessToken = res.accessToken;
+
+        if (!newAccessToken) {
+          throw new Error("No access token returned");
+        }
 
         localStorage.setItem("accessToken", newAccessToken);
 
         api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+
+        originalRequest.headers = originalRequest.headers || {};
+
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
         processQueue(null, newAccessToken);
@@ -71,6 +93,7 @@ api.interceptors.response.use(
         processQueue(err, null);
 
         localStorage.removeItem("accessToken");
+
         window.location.href = "/login";
 
         return Promise.reject(err);

@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { useCallStore } from "../utils/call.store";
+
 import {
   Phone,
   Mic,
@@ -54,8 +56,9 @@ export const CallPage = () => {
 
   const [isVideoFull, setIsVideoFull] = useState(false);
 
+  // DRAG POSITION
   const [dragPosition, setDragPosition] = useState({
-    x: window.innerWidth - 260,
+    x: window.innerWidth - 280,
     y: window.innerHeight - 120,
   });
 
@@ -70,7 +73,37 @@ export const CallPage = () => {
     setIsVideoFull((prev) => !prev);
   };
 
+  // DRAG MOVE
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!dragging.current) return;
+
+    const width = 260;
+    const height = 80;
+
+    const x = Math.min(
+      window.innerWidth - width,
+      Math.max(0, e.clientX - offset.current.x),
+    );
+
+    const y = Math.min(
+      window.innerHeight - height,
+      Math.max(0, e.clientY - offset.current.y),
+    );
+
+    setDragPosition({ x, y });
+  }, []);
+
+  // DRAG END
+  const handleMouseUp = useCallback(() => {
+    dragging.current = false;
+
+    document.removeEventListener("mousemove", handleMouseMove);
+  }, [handleMouseMove]);
+
+  // DRAG START
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
     dragging.current = true;
 
     offset.current = {
@@ -80,25 +113,17 @@ export const CallPage = () => {
 
     document.addEventListener("mousemove", handleMouseMove);
 
-    document.addEventListener("mouseup", handleMouseUp);
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!dragging.current) return;
-
-    setDragPosition({
-      x: e.clientX - offset.current.x,
-      y: e.clientY - offset.current.y,
+    document.addEventListener("mouseup", handleMouseUp, {
+      once: true,
     });
   };
 
-  const handleMouseUp = () => {
-    dragging.current = false;
-
-    document.removeEventListener("mousemove", handleMouseMove);
-
-    document.removeEventListener("mouseup", handleMouseUp);
-  };
+  // CLEANUP
+  useEffect(() => {
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [handleMouseMove]);
 
   useEffect(() => {
     if (!remoteStream) return;
@@ -135,13 +160,16 @@ export const CallPage = () => {
     // VIDEO
     if (videoRef.current) {
       videoRef.current.srcObject = remoteStream;
+
       videoRef.current.play().catch(() => {});
     }
 
     // AUDIO
     if (audioRef.current) {
       audioRef.current.srcObject = remoteStream;
+
       audioRef.current.muted = false;
+
       audioRef.current.volume = 1;
 
       audioRef.current.play().catch(console.error);
@@ -149,15 +177,21 @@ export const CallPage = () => {
   }, [remoteStream]);
 
   useEffect(() => {
-    if (isIncoming && !isInCall) startRingtone();
-    else stopRingtone();
+    if (isIncoming && !isInCall) {
+      startRingtone();
+    } else {
+      stopRingtone();
+    }
 
     return () => stopRingtone();
   }, [isIncoming, isInCall]);
 
   useEffect(() => {
-    if (isCalling && !isIncoming && !isInCall) startCallingTone();
-    else stopCallingTone();
+    if (isCalling && !isIncoming && !isInCall) {
+      startCallingTone();
+    } else {
+      stopCallingTone();
+    }
 
     return () => stopCallingTone();
   }, [isCalling, isIncoming, isInCall]);
@@ -169,14 +203,16 @@ export const CallPage = () => {
       {/* MINIMIZED */}
       {isMinimized && isInCall ? (
         <div
-          onMouseDown={handleMouseDown}
           style={{
             left: dragPosition.x,
             top: dragPosition.y,
           }}
-          className="fixed z-50 cursor-move select-none"
+          className="fixed z-50"
         >
-          <div className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 text-white px-4 py-3 rounded-2xl flex items-center gap-3 shadow-xl">
+          <div
+            onMouseDown={handleMouseDown}
+            className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 text-white px-4 py-3 rounded-2xl flex items-center gap-3 shadow-xl cursor-move select-none"
+          >
             <PhoneCall size={16} className="opacity-80" />
 
             <span className="text-sm opacity-90">Call in progress</span>

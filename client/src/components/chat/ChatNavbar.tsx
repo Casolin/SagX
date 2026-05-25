@@ -81,7 +81,7 @@ const ChatNavbar = ({ selectedUser = null, roomId }: Props) => {
 
   return (
     <div className="h-20 bg-white/90 backdrop-blur-xl border-b border-gray-100 px-6 flex items-center justify-between">
-      <div className="flex items-center gap-4 min-w-0">
+      <div className="flex items-center gap-4">
         {selectedUser && !isRoom && (
           <>
             <img
@@ -89,7 +89,7 @@ const ChatNavbar = ({ selectedUser = null, roomId }: Props) => {
               className="w-11 h-11 rounded-full"
             />
             <div>
-              <p className="font-semibold truncate max-w-40">
+              <p className="font-semibold">
                 {selectedUser.firstName} {selectedUser.lastName}
               </p>
               <p className="text-xs text-green-600">Online</p>
@@ -111,7 +111,7 @@ const ChatNavbar = ({ selectedUser = null, roomId }: Props) => {
         )}
       </div>
 
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-3">
         {selectedUser && !isRoom && (
           <button
             onClick={handleStartCall}

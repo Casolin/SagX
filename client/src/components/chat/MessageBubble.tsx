@@ -45,6 +45,27 @@ const MessageBubble = ({ message, own, setMessages }: Props) => {
     });
   };
 
+  const linkify = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    return text.split(urlRegex).map((part, i) => {
+      if (urlRegex.test(part)) {
+        return (
+          <a
+            key={i}
+            href={part}
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-500 underline break-all"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   /* ---------------- EDIT ---------------- */
   const handleEdit = async () => {
     try {
@@ -171,7 +192,7 @@ const MessageBubble = ({ message, own, setMessages }: Props) => {
 
     return (
       <p className="text-sm break-all whitespace-pre-wrap w-full">
-        {message.content}
+        {linkify(message.content)}
       </p>
     );
   };

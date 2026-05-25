@@ -13,7 +13,7 @@ export default defineConfig({
       manifest: {
         name: "SagX",
         short_name: "SagX",
-        start_url: "/",
+        start_url: "/dashboard",
         display: "standalone",
         background_color: "#000000",
         theme_color: "#000000",

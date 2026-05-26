@@ -10,7 +10,6 @@ import { CallBusyModal } from "./components/CallBusyModal";
 
 function App() {
   const { loading, user } = useAuth();
-
   const incomingCall = useCallStore((s) => s.incomingCall);
   const callAccepted = useCallStore((s) => s.callAccepted);
   const isCalling = useCallStore((s) => s.isCalling);

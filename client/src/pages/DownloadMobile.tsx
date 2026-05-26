@@ -7,7 +7,7 @@ export default function DownloadMobile() {
   const navigate = useNavigate();
 
   const apkUrl =
-    "https://github.com/Casolin/Sagx/releases/download/App/sagx.apk"; // replace
+    "https://github.com/Casolin/Sagx/releases/download/App/sagxapp.apk"; // replace
 
   const handleDownload = async () => {
     try {

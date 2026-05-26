@@ -2,6 +2,7 @@ import { create } from "zustand";
 import Peer from "simple-peer";
 import { Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "../services/socket.events";
+import { ScreenRecorder } from "@capgo/capacitor-screen-recorder";
 
 type CallUser = {
   _id: string;
@@ -247,6 +248,9 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     if (isMobile) {
       if (!isScreenSharing) {
+        await ScreenRecorder.start();
+
+        // fake stream fallback (IMPORTANT)
         const canvas = document.createElement("canvas");
         canvas.width = 1280;
         canvas.height = 720;
@@ -256,12 +260,12 @@ export const useCallStore = create<CallState>((set, get) => ({
         const draw = () => {
           if (!ctx) return;
 
-          ctx.fillStyle = "#0f172a";
+          ctx.fillStyle = "#111";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
           ctx.fillStyle = "#fff";
           ctx.font = "30px Arial";
-          ctx.fillText("Mobile Screen Sharing", 50, 100);
+          ctx.fillText("Screen Sharing Active (Mobile)", 50, 100);
 
           requestAnimationFrame(draw);
         };
@@ -270,7 +274,6 @@ export const useCallStore = create<CallState>((set, get) => ({
 
         const stream = canvas.captureStream(30);
         const track = stream.getVideoTracks()[0];
-
         // eslint-disable-next-line
         const pc = (peer as any)._pc as RTCPeerConnection;
         const sender = pc.getSenders().find((s) => s.track?.kind === "video");
@@ -281,6 +284,7 @@ export const useCallStore = create<CallState>((set, get) => ({
 
         set({ isScreenSharing: true });
       } else {
+        await ScreenRecorder.stop();
         // eslint-disable-next-line
         const pc = (peer as any)._pc as RTCPeerConnection;
         const sender = pc.getSenders().find((s) => s.track?.kind === "video");

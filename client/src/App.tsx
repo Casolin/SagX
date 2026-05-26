@@ -30,6 +30,18 @@ function App() {
     startTokenAutoRefresh();
   }, [user?._id]);
 
+  useEffect(() => {
+    const handleReload = () => {
+      useCallStore.getState().endCall();
+    };
+
+    window.addEventListener("beforeunload", handleReload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleReload);
+    };
+  }, []);
+
   if (loading) {
     return <Loader />;
   }

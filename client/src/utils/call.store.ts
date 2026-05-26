@@ -175,8 +175,6 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     if (!socket) return;
 
-    const shouldBeInitiator = currentUser._id < receiverId;
-
     const audioStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
     });
@@ -189,22 +187,17 @@ export const useCallStore = create<CallState>((set, get) => ({
     ]);
 
     const peer = new Peer({
-      initiator: shouldBeInitiator,
+      initiator: true,
       trickle: false,
       stream,
     });
 
-    peer.on("signal", (data) => {
-      socket.emit(
-        shouldBeInitiator
-          ? SOCKET_EVENTS.CALL_OFFER
-          : SOCKET_EVENTS.CALL_ANSWER,
-        {
-          to: receiverId,
-          offer: data,
-          caller: currentUser,
-        },
-      );
+    peer.on("signal", (offer) => {
+      socket.emit(SOCKET_EVENTS.CALL_OFFER, {
+        to: receiverId,
+        offer,
+        caller: currentUser,
+      });
     });
 
     peer.on("stream", (remoteStream) => {

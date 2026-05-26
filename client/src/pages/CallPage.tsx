@@ -15,8 +15,6 @@ import {
   MonitorOff,
   Maximize,
   Minimize,
-  VolumeX,
-  Volume2,
 } from "lucide-react";
 
 import {
@@ -41,7 +39,6 @@ export const CallPage = () => {
 
   const toggleMute = useCallStore((s) => s.toggleMute);
   const toggleScreenShare = useCallStore((s) => s.toggleScreenShare);
-  const [isSpeakerMuted, setIsSpeakerMuted] = useState(false);
 
   const isMuted = useCallStore((s) => s.isMuted);
   const isScreenSharing = useCallStore((s) => s.isScreenSharing);
@@ -141,8 +138,6 @@ export const CallPage = () => {
       }
 
       try {
-        videoRef.current.muted = isSpeakerMuted;
-
         await videoRef.current.play();
       } catch (err) {
         // @ts-expect-error chat
@@ -159,7 +154,7 @@ export const CallPage = () => {
     return () => {
       window.removeEventListener("focus", attachStream);
     };
-  }, [remoteStream, isMinimized, isSpeakerMuted]);
+  }, [remoteStream, isMinimized]);
 
   useEffect(() => {
     if (!remoteStream) return;
@@ -299,12 +294,6 @@ export const CallPage = () => {
                 ) : (
                   <ScreenShare size={18} />
                 )}
-              </button>
-              <button
-                onClick={() => setIsSpeakerMuted((prev) => !prev)}
-                className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition cursor-pointer"
-              >
-                {isSpeakerMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
               </button>
 
               <button

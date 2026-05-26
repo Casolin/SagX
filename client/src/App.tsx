@@ -2,7 +2,7 @@ import { AppRouter } from "./routes/AppRouter";
 import { useAuth } from "./hooks/useAuth";
 import Loader from "./components/Loader";
 import { useEffect } from "react";
-import { initSocket } from "./services/socket.service";
+import { initSocket, disconnectSocket } from "./services/socket.service";
 import { useCallStore } from "./utils/call.store";
 import { CallPage } from "./pages/CallPage";
 import { startTokenAutoRefresh } from "./utils/tokenAutoRefresh";
@@ -18,9 +18,13 @@ function App() {
   const setCallBusyOpen = useCallStore((s) => s.setCallBusyOpen);
 
   useEffect(() => {
-    if (user?._id) {
-      initSocket(user._id);
-    }
+    if (!user?._id) return;
+
+    initSocket(user._id);
+
+    return () => {
+      disconnectSocket();
+    };
   }, [user?._id]);
 
   useEffect(() => {

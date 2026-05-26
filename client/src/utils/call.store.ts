@@ -175,12 +175,9 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     if (!socket) return;
 
-    const incomingCall = get().incomingCall;
-
-    if (incomingCall && incomingCall.caller._id === receiverId) {
-      await get().answerCall();
-      return;
-    }
+    // 🚨 DOUBLE CALL FIX (GLOBAL RULE)
+    // Deterministic initiator selection
+    const shouldBeInitiator = currentUser._id < receiverId;
 
     const audioStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
@@ -194,17 +191,22 @@ export const useCallStore = create<CallState>((set, get) => ({
     ]);
 
     const peer = new Peer({
-      initiator: true,
+      initiator: shouldBeInitiator,
       trickle: false,
       stream,
     });
 
-    peer.on("signal", (offer) => {
-      socket.emit(SOCKET_EVENTS.CALL_OFFER, {
-        to: receiverId,
-        offer,
-        caller: currentUser,
-      });
+    peer.on("signal", (data) => {
+      socket.emit(
+        shouldBeInitiator
+          ? SOCKET_EVENTS.CALL_OFFER
+          : SOCKET_EVENTS.CALL_ANSWER,
+        {
+          to: receiverId,
+          offer: data,
+          caller: currentUser,
+        },
+      );
     });
 
     peer.on("stream", (remoteStream) => {

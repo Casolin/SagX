@@ -34,6 +34,10 @@ export default function AlertSelector({
     setMachineId(machineId);
   };
 
+  const filteredAlerts = alerts.filter(
+    (a) => a.status === "OPEN" || a.status === "IN_PROGRESS",
+  );
+
   return (
     <select
       value={alertId}
@@ -42,7 +46,7 @@ export default function AlertSelector({
     >
       <option value="">Select alert (optional)</option>
 
-      {alerts.map((a) => (
+      {filteredAlerts.map((a) => (
         <option key={a._id} value={a._id}>
           {a.type} - {a.message} -{" "}
           {typeof a.machine === "object" && a.machine !== null

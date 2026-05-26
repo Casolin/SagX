@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { SOCKET_EVENTS } from "./socket.events.js";
-const usersInCall = new Map<string, string>();
+const activeCalls = new Map<string, { a: string; b: string }>();
+const ringingUsers = new Map<string, string>(); // caller → receiver
 
 export const initAppSocket = (io: Server) => {
   io.on("connection", (socket: Socket) => {
@@ -140,53 +141,38 @@ export const initAppSocket = (io: Server) => {
     // =========================
     // CALL OFFER
     // =========================
-    socket.on(SOCKET_EVENTS.CALL_OFFER, (data) => {
-      try {
-        const { to, offer, caller } = data;
+    socket.on(SOCKET_EVENTS.CALL_OFFER, ({ to, offer, caller }) => {
+      const callerId = String(caller._id);
+      const receiverId = String(to);
 
-        if (!to || !offer || !caller?._id) return;
-
-        const callerId = String(caller._id);
-
-        // receiver busy
-        if (usersInCall.has(String(to))) {
-          io.to(callerId).emit("CALL_BUSY");
-          return;
-        }
-
-        // caller busy
-        if (usersInCall.has(callerId)) {
-          io.to(callerId).emit("CALL_BUSY");
-          return;
-        }
-
-        io.to(String(to)).emit(SOCKET_EVENTS.CALL_OFFER, {
-          offer,
-          caller,
-        });
-      } catch (err) {
-        console.error("CALL_OFFER ERROR:", err);
+      if (activeCalls.has(callerId) || activeCalls.has(receiverId)) {
+        io.to(callerId).emit("CALL_BUSY");
+        return;
       }
+
+      ringingUsers.set(callerId, receiverId);
+
+      io.to(receiverId).emit(SOCKET_EVENTS.CALL_OFFER, {
+        offer,
+        caller,
+      });
     });
 
     // =========================
     // CALL ANSWER
     // =========================
-    socket.on(SOCKET_EVENTS.CALL_ANSWER, (data) => {
-      try {
-        const { to, answer } = data;
+    socket.on(SOCKET_EVENTS.CALL_ANSWER, ({ to, answer }) => {
+      const userId = String(socket.handshake.auth?.userId);
 
-        if (!to || !answer || !userId) return;
+      const callerId = to;
 
-        usersInCall.set(String(userId), String(to));
-        usersInCall.set(String(to), String(userId));
+      activeCalls.set(userId, { a: userId, b: callerId });
+      activeCalls.set(callerId, { a: userId, b: callerId });
 
-        io.to(String(to)).emit(SOCKET_EVENTS.CALL_ANSWER, {
-          answer,
-        });
-      } catch (err) {
-        console.error("CALL_ANSWER ERROR:", err);
-      }
+      ringingUsers.delete(userId);
+      ringingUsers.delete(callerId);
+
+      io.to(callerId).emit(SOCKET_EVENTS.CALL_ANSWER, { answer });
     });
 
     // =========================
@@ -223,40 +209,31 @@ export const initAppSocket = (io: Server) => {
     // CALL END
     // =========================
     socket.on(SOCKET_EVENTS.CALL_END, ({ to }) => {
-      try {
-        if (!to || !userId) return;
+      const from = String(socket.handshake.auth?.userId);
 
-        usersInCall.delete(String(userId));
-        usersInCall.delete(String(to));
+      const call = activeCalls.get(from);
 
-        io.to(String(to)).emit(SOCKET_EVENTS.CALL_END);
-      } catch (err) {
-        console.error("CALL_END ERROR:", err);
-      }
+      if (!call) return;
+
+      const other = call.a === from ? call.b : call.a;
+
+      activeCalls.delete(call.a);
+      activeCalls.delete(call.b);
+
+      io.to(other).emit(SOCKET_EVENTS.CALL_END);
     });
 
     // =========================
     // CANCEL OUTGOING CALL
     // =========================
     socket.on(SOCKET_EVENTS.CALL_CANCEL, ({ to }) => {
-      try {
-        if (!to || !userId) return;
+      const from = String(socket.handshake.auth?.userId);
 
-        const callerId = String(userId);
-        const receiverId = String(to);
+      // only cancel ringing
+      if (ringingUsers.get(from) === to) {
+        ringingUsers.delete(from);
 
-        io.to(receiverId).emit(SOCKET_EVENTS.CALL_CANCEL, {
-          from: callerId,
-        });
-
-        const pairedUser = usersInCall.get(callerId);
-
-        if (pairedUser === receiverId) {
-          usersInCall.delete(callerId);
-          usersInCall.delete(receiverId);
-        }
-      } catch (err) {
-        console.error("CANCEL_OUTGOING_CALL ERROR:", err);
+        io.to(to).emit(SOCKET_EVENTS.CALL_CANCEL, { from });
       }
     });
 

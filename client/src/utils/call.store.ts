@@ -331,7 +331,7 @@ export const useCallStore = create<CallState>((set, get) => ({
       });
     }
 
-    window.location.reload();
+    get().cleanup();
   },
 
   minimizeCall: () => {

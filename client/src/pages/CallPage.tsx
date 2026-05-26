@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { SOCKET_EVENTS } from "../services/socket.events";
 import { useCallStore } from "../utils/call.store";
 
 import {
@@ -33,6 +33,7 @@ export const CallPage = () => {
   const rejectCall = useCallStore((s) => s.rejectCall);
   const endCall = useCallStore((s) => s.endCall);
   const cancelOutgoingCall = useCallStore((s) => s.cancelOutgoingCall);
+  const socket = useCallStore((s) => s.socket);
 
   const remoteStream = useCallStore((s) => s.remoteStream);
 
@@ -196,6 +197,20 @@ export const CallPage = () => {
 
     return () => stopCallingTone();
   }, [isCalling, isIncoming, isInCall]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const onCancel = () => {
+      useCallStore.getState().cleanup();
+    };
+
+    socket.on(SOCKET_EVENTS.CALL_CANCEL, onCancel);
+
+    return () => {
+      socket.off(SOCKET_EVENTS.CALL_CANCEL, onCancel);
+    };
+  }, [socket]);
 
   return (
     <>

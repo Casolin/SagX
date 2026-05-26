@@ -86,7 +86,7 @@ export default function Sidebar({
       if (isSameConversation) return;
 
       const audio = new Audio("/notification.wav");
-      audio.volume = 0.05;
+      audio.volume = 0.4;
       audio.play().catch(() => {});
     };
 

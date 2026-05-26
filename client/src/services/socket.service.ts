@@ -87,6 +87,10 @@ export const initSocket = (userId: string) => {
     console.log("Friend Removed:", data);
   });
 
+  socket.on(SOCKET_EVENTS.CALL_OFFER, (data) => {
+    console.log("Call Offer:", data);
+  });
+
   socket.on("CALL_BUSY", () => {
     console.log("User is busy in call");
 

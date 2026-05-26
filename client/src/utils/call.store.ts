@@ -110,9 +110,11 @@ export const useCallStore = create<CallState>((set, get) => ({
     set({ socket });
 
     socket.on(SOCKET_EVENTS.CALL_OFFER, async (data) => {
-      const { isCalling, activeCallUserId } = get();
+      const { isCalling } = get();
 
-      if (isCalling && activeCallUserId === data.caller._id) {
+      // user is already calling someone
+      // automatically accept incoming call
+      if (isCalling) {
         set({
           incomingCall: data,
         });

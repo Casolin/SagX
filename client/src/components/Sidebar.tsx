@@ -49,6 +49,9 @@ export default function Sidebar({
   useEffect(() => {
     if (unreadCount > prevCountRef.current) {
       const audio = new Audio("/notification.wav");
+
+      audio.volume = 0.08;
+
       audio.play().catch(() => {});
     }
 

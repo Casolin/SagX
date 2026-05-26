@@ -245,31 +245,56 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    // MOBILE
     if (isMobile) {
-      try {
+      if (!isScreenSharing) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1280;
+        canvas.height = 720;
+
+        const ctx = canvas.getContext("2d");
+
+        const draw = () => {
+          if (!ctx) return;
+
+          ctx.fillStyle = "#0f172a";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = "#fff";
+          ctx.font = "30px Arial";
+          ctx.fillText("Mobile Screen Sharing", 50, 100);
+
+          requestAnimationFrame(draw);
+        };
+
+        draw();
+
+        const stream = canvas.captureStream(30);
+        const track = stream.getVideoTracks()[0];
+
         // eslint-disable-next-line
-        const ScreenRecorder = (window as any).Capacitor?.Plugins
-          ?.ScreenRecorder;
+        const pc = (peer as any)._pc as RTCPeerConnection;
+        const sender = pc.getSenders().find((s) => s.track?.kind === "video");
 
-        if (!ScreenRecorder) {
-          alert("Screen recorder plugin not installed");
-          return;
+        if (sender && track) {
+          await sender.replaceTrack(track);
         }
 
-        if (!isScreenSharing) {
-          await ScreenRecorder.start();
-          set({ isScreenSharing: true });
-        } else {
-          await ScreenRecorder.stop();
-          set({ isScreenSharing: false });
+        set({ isScreenSharing: true });
+      } else {
+        // eslint-disable-next-line
+        const pc = (peer as any)._pc as RTCPeerConnection;
+        const sender = pc.getSenders().find((s) => s.track?.kind === "video");
+
+        const fallback = stream.getVideoTracks()[0];
+
+        if (sender && fallback) {
+          await sender.replaceTrack(fallback);
         }
 
-        return;
-      } catch (e) {
-        console.log(e);
-        return;
+        set({ isScreenSharing: false });
       }
+
+      return;
     }
 
     // eslint-disable-next-line

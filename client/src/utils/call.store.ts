@@ -245,81 +245,63 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+    if (isMobile && !navigator.mediaDevices?.getDisplayMedia) {
+      alert("Screen sharing is not supported on this mobile browser");
+      return;
+    }
+
+    // eslint-disable-next-line
     const pc = (peer as any)._pc as RTCPeerConnection;
 
-    const videoSender = pc.getSenders().find((s) => s.track?.kind === "video");
+    const sender = pc.getSenders().find((s) => s.track?.kind === "video");
+
     const audioSender = pc.getSenders().find((s) => s.track?.kind === "audio");
 
-    if (!videoSender) return;
+    if (!sender) return;
 
-    // =========================
-    // MOBILE (SAFE MODE)
-    // =========================
-    if (isMobile) {
-      if (!isScreenSharing) {
-        const camStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
+    const dummyTrack = stream.getVideoTracks()[0];
 
-        const videoTrack = camStream.getVideoTracks()[0];
-
-        if (videoTrack) {
-          await videoSender.replaceTrack(videoTrack);
-        }
-
-        set({ isScreenSharing: true });
-      } else {
-        const fallback = stream.getVideoTracks()[0];
-
-        if (fallback) {
-          await videoSender.replaceTrack(fallback);
-        }
-
-        set({ isScreenSharing: false });
+    if (isScreenSharing) {
+      if (dummyTrack) {
+        await sender.replaceTrack(dummyTrack);
       }
+
+      set({
+        isScreenSharing: false,
+      });
 
       return;
     }
 
-    // =========================
-    // DESKTOP (REAL SCREEN SHARE)
-    // =========================
-    if (!isScreenSharing) {
-      const screenStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true,
-      });
+    const screenStream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+      audio: true,
+    });
 
-      const screenTrack = screenStream.getVideoTracks()[0];
-      const screenAudio = screenStream.getAudioTracks()[0];
+    const screenTrack = screenStream.getVideoTracks()[0];
+    const screenAudioTrack = screenStream.getAudioTracks()[0];
 
-      await videoSender.replaceTrack(screenTrack);
+    await sender.replaceTrack(screenTrack);
 
-      if (audioSender && screenAudio) {
-        await audioSender.replaceTrack(screenAudio);
-      }
-
-      screenTrack.onended = async () => {
-        const fallback = stream.getVideoTracks()[0];
-
-        if (fallback) {
-          await videoSender.replaceTrack(fallback);
-        }
-
-        set({ isScreenSharing: false });
-      };
-
-      set({ isScreenSharing: true });
-    } else {
-      const fallback = stream.getVideoTracks()[0];
-
-      if (fallback) {
-        await videoSender.replaceTrack(fallback);
-      }
-
-      set({ isScreenSharing: false });
+    if (audioSender && screenAudioTrack) {
+      await audioSender.replaceTrack(screenAudioTrack);
     }
+
+    screenTrack.onended = async () => {
+      const fallbackTrack = stream.getVideoTracks()[0];
+
+      if (fallbackTrack) {
+        await sender.replaceTrack(fallbackTrack);
+      }
+
+      set({
+        isScreenSharing: false,
+      });
+    };
+
+    set({
+      isScreenSharing: true,
+    });
   },
 
   minimizeCall: () => {

@@ -10,6 +10,31 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
+
+      manifest: {
+        name: "SagX",
+        short_name: "SagX",
+        description: "Your Favorite Management Tool",
+        start_url: "/dashboard",
+        display: "standalone",
+        background_color: "#000000",
+        theme_color: "#000000",
+
+        icons: [
+          {
+            src: "/icons/icon-192.webp",
+            sizes: "192x192",
+            type: "image/webp",
+            purpose: "any maskable",
+          },
+          {
+            src: "/icons/icon-512.webp",
+            sizes: "512x512",
+            type: "image/webp",
+            purpose: "any maskable",
+          },
+        ],
+      },
     }),
   ],
 

@@ -211,7 +211,7 @@ export const CallPage = () => {
         >
           <div
             onMouseDown={handleMouseDown}
-            className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 text-white px-4 py-3 rounded-2xl flex items-center gap-3 shadow-xl cursor-move select-none"
+            className="bg-linear-to-b from-gray-950 via-gray-900 to-black backdrop-blur-xl border border-white/10 text-white px-4 py-3 rounded-2xl flex items-center gap-3 shadow-xl cursor-move select-none"
           >
             <PhoneCall size={16} className="opacity-80" />
 

@@ -338,7 +338,7 @@ export const CallPage = () => {
               <p className="text-white/70 text-sm">Calling...</p>
 
               <button
-                onClick={endCall}
+                onClick={() => window.location.reload()}
                 className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition cursor-pointer"
               >
                 <PhoneOff />

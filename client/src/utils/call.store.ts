@@ -22,6 +22,9 @@ type CallState = {
   callAccepted: boolean;
   isCalling: boolean;
 
+  callBusyOpen: boolean;
+  setCallBusyOpen: (v: boolean) => void;
+
   peer: Peer.Instance | null;
 
   stream: MediaStream | null;
@@ -90,6 +93,10 @@ export const useCallStore = create<CallState>((set, get) => ({
   stream: null,
   remoteStream: null,
 
+  callBusyOpen: false,
+
+  setCallBusyOpen: (v) => set({ callBusyOpen: v }),
+
   activeCallUserId: null,
 
   isMuted: false,
@@ -131,9 +138,11 @@ export const useCallStore = create<CallState>((set, get) => ({
     });
 
     socket.on("CALL_BUSY", () => {
-      alert("User is already in a call");
+      set({ callBusyOpen: true });
 
-      get().cleanup();
+      setTimeout(() => {
+        get().cleanup();
+      }, 0);
     });
   },
 

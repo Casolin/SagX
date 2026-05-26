@@ -6,7 +6,7 @@ import { useCallStore } from "../utils/call.store";
 let socket: Socket | null = null;
 
 export const initSocket = (userId: string) => {
-  if (socket && socket.connected) return socket;
+  if (socket) return socket;
 
   socket = io(import.meta.env.VITE_SERVER_API, {
     withCredentials: true,

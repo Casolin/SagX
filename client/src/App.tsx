@@ -21,10 +21,6 @@ function App() {
     if (user?._id) {
       initSocket(user._id);
     }
-
-    return () => {
-      disconnectSocket();
-    };
   }, [user?._id]);
 
   useEffect(() => {

@@ -129,6 +129,12 @@ export const useCallStore = create<CallState>((set, get) => ({
     socket.on(SOCKET_EVENTS.CALL_END, () => {
       get().cleanup();
     });
+
+    socket.on("CALL_BUSY", () => {
+      alert("User is already in a call");
+
+      get().cleanup();
+    });
   },
 
   startCall: async (receiverId, currentUser) => {

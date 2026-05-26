@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { SOCKET_EVENTS } from "./socket.events.js";
+const usersInCall = new Map<string, string>();
 
 export const initAppSocket = (io: Server) => {
   io.on("connection", (socket: Socket) => {
@@ -143,7 +144,21 @@ export const initAppSocket = (io: Server) => {
       try {
         const { to, offer, caller } = data;
 
-        if (!to || !offer) return;
+        if (!to || !offer || !caller?._id) return;
+
+        const callerId = String(caller._id);
+
+        // receiver busy
+        if (usersInCall.has(String(to))) {
+          io.to(callerId).emit("CALL_BUSY");
+          return;
+        }
+
+        // caller busy
+        if (usersInCall.has(callerId)) {
+          io.to(callerId).emit("CALL_BUSY");
+          return;
+        }
 
         io.to(String(to)).emit(SOCKET_EVENTS.CALL_OFFER, {
           offer,
@@ -161,7 +176,10 @@ export const initAppSocket = (io: Server) => {
       try {
         const { to, answer } = data;
 
-        if (!to || !answer) return;
+        if (!to || !answer || !userId) return;
+
+        usersInCall.set(String(userId), String(to));
+        usersInCall.set(String(to), String(userId));
 
         io.to(String(to)).emit(SOCKET_EVENTS.CALL_ANSWER, {
           answer,
@@ -206,7 +224,10 @@ export const initAppSocket = (io: Server) => {
     // =========================
     socket.on(SOCKET_EVENTS.CALL_END, ({ to }) => {
       try {
-        if (!to) return;
+        if (!to || !userId) return;
+
+        usersInCall.delete(String(userId));
+        usersInCall.delete(String(to));
 
         io.to(String(to)).emit(SOCKET_EVENTS.CALL_END);
       } catch (err) {

@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { menuByRole } from "../constants/menu";
 import { LogOut, Menu, ArrowLeftFromLine, Bell } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useNotificationStore } from "../utils/notification.store";
 import { getNotifications } from "../api/notification.api";
@@ -29,6 +29,7 @@ export default function Sidebar({
   const openNotifications = useNotificationStore((s) => s.openPanel);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const prevCountRef = useRef(unreadCount);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -44,6 +45,15 @@ export default function Sidebar({
 
     fetchNotifications();
   }, [setNotifications]);
+
+  useEffect(() => {
+    if (unreadCount > prevCountRef.current) {
+      const audio = new Audio("/notification.mp3");
+      audio.play().catch(() => {});
+    }
+
+    prevCountRef.current = unreadCount;
+  }, [unreadCount]);
 
   return (
     <>

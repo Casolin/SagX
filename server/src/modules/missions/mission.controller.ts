@@ -18,11 +18,7 @@ import { consumeMaterials } from "../materials/material.service.js";
 import Alert from "../alert/alert.model.js";
 import { createActivityLog } from "../logs/activitylog.service.js";
 import { createNotification } from "../notification/notification.service.js";
-import {
-  broadcastMissionCreated,
-  broadcastMissionUpdated,
-  broadcastMissionDeleted,
-} from "../../utils/mission.helper.js";
+import { missionEvents } from "../../utils/mission.helper.js";
 
 /* ---------------- SAFE PARAM ---------------- */
 const getParam = (param: unknown): string => {
@@ -210,7 +206,7 @@ export const create = async (req: Request, res: Response) => {
 
     emitToUser(assignedTech.id, SOCKET_EVENTS.NOTIFICATION_NEW, notification);
     await broadcastKpiUpdate();
-    await broadcastMissionCreated(mission);
+    missionEvents.created(mission);
 
     return res.status(201).json({
       success: true,
@@ -257,7 +253,7 @@ export const update = async (req: Request, res: Response) => {
   });
 
   await broadcastKpiUpdate();
-  await broadcastMissionUpdated(mission);
+  missionEvents.updated(mission);
 
   return res.json({ success: true, data: mission });
 };
@@ -280,7 +276,7 @@ export const remove = async (req: Request, res: Response) => {
   });
 
   await broadcastKpiUpdate();
-  await broadcastMissionDeleted(mission);
+  missionEvents.deleted(mission);
 
   return res.json({ success: true, data: mission });
 };
@@ -401,7 +397,7 @@ export const updateTaskStatus = async (req: Request, res: Response) => {
       description: `Task ${taskId} updated`,
     });
     await broadcastKpiUpdate();
-    await broadcastMissionUpdated(mission);
+    missionEvents.updated(mission);
 
     return res.json({ success: true, data: mission });
   } catch (error: any) {

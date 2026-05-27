@@ -4,69 +4,77 @@ import { emitToUser } from "../sockets/socket.service.js";
 import { SOCKET_EVENTS } from "../sockets/socket.events.js";
 
 const getPopulatedAlert = async (alertId: string) => {
-  const alert = await Alert.findById(alertId)
-    .populate("machine", "name")
-    .lean();
-  return alert;
+  return await Alert.findById(alertId).populate("machine", "name").lean();
 };
 
 const populateMachineIfNeeded = async (alert: any) => {
   if (alert.machine && typeof alert.machine === "string") {
-    const populated = await Alert.populate(alert, {
+    return await Alert.populate(alert, {
       path: "machine",
       select: "name",
     });
-    return populated;
   }
   return alert;
 };
 
-const broadcastToAllUsers = async (event: string, alert: any) => {
-  const users = await User.find({}).select("_id role");
-  users.forEach((user) => {
-    emitToUser(user._id.toString(), event, alert);
-  });
-};
-
-export const broadcastAlertCreated = async (alert: any) => {
-  let populatedAlert;
-
-  if (alert._id) {
-    populatedAlert = await getPopulatedAlert(alert._id);
-  }
-
-  if (!populatedAlert) {
-    populatedAlert = await populateMachineIfNeeded(alert.alert || alert);
-  }
+const broadcastAlert = async (alert: any, event: string) => {
+  const populatedAlert = alert._id
+    ? await getPopulatedAlert(alert._id)
+    : await populateMachineIfNeeded(alert.alert || alert);
 
   if (!populatedAlert) return;
 
-  broadcastToAllUsers(SOCKET_EVENTS.ALERT_CREATED, populatedAlert);
-};
-
-export const broadcastAlertUpdated = async (alert: any) => {
-  const populatedAlert = await getPopulatedAlert(alert._id);
-  if (!populatedAlert) return;
-
-  const users = await User.find({}).select("_id role");
-  users.forEach((user) => {
-    emitToUser(
-      user._id.toString(),
-      SOCKET_EVENTS.ALERT_UPDATED,
-      populatedAlert,
-    );
+  const adminsAndManagers = await User.find({
+    role: { $in: ["ADMIN", "MANAGER"] },
+  }).select("_id");
+  adminsAndManagers.forEach((user) => {
+    emitToUser(user._id.toString(), event, populatedAlert);
   });
+
+  if (populatedAlert.createdBy) {
+    const tech = await User.findOne({
+      _id: populatedAlert.createdBy,
+      role: "TECHNICIAN",
+    }).select("_id");
+    if (tech) {
+      emitToUser(tech._id.toString(), event, populatedAlert);
+    }
+  }
 };
+
+export const broadcastAlertCreated = async (alert: any) =>
+  broadcastAlert(alert, SOCKET_EVENTS.ALERT_CREATED);
+
+export const broadcastAlertUpdated = async (alert: any) =>
+  broadcastAlert(alert, SOCKET_EVENTS.ALERT_UPDATED);
 
 export const broadcastAlertDeleted = async (alert: any) => {
-  const populatedAlert = await populateMachineIfNeeded(alert);
+  let populatedAlert = alert;
 
-  const users = await User.find({}).select("_id role");
-  users.forEach((user) => {
+  if (alert.machine && typeof alert.machine === "string") {
+    populatedAlert = await Alert.populate(alert, {
+      path: "machine",
+      select: "name",
+    });
+  }
+
+  const adminsAndManagers = await User.find({
+    role: { $in: ["ADMIN", "MANAGER"] },
+  }).select("_id");
+
+  adminsAndManagers.forEach((user) => {
     emitToUser(
       user._id.toString(),
       SOCKET_EVENTS.ALERT_DELETED,
       populatedAlert,
     );
   });
+
+  if (populatedAlert.createdBy) {
+    emitToUser(
+      populatedAlert.createdBy.toString(),
+      SOCKET_EVENTS.ALERT_DELETED,
+      populatedAlert,
+    );
+  }
 };

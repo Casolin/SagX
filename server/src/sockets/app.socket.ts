@@ -4,6 +4,14 @@ const activeCalls = new Map<string, { a: string; b: string }>();
 const ringingUsers = new Map<string, string>(); // caller → receiver
 const userSockets = new Map<string, Set<string>>();
 
+const pendingCalls = new Map<
+  string,
+  {
+    offer: any;
+    caller: any;
+  }
+>();
+
 const emitToUser = (io: Server, userId: string, event: string, data?: any) => {
   const sockets = userSockets.get(userId);
 
@@ -31,6 +39,14 @@ export const initAppSocket = (io: Server) => {
       }
 
       userSockets.get(userId)!.add(socket.id);
+
+      const pendingCall = pendingCalls.get(userId);
+
+      if (pendingCall) {
+        socket.emit(SOCKET_EVENTS.CALL_OFFER, pendingCall);
+        pendingCalls.delete(userId);
+        console.log("Delivered pending call to:", userId);
+      }
 
       console.log("User joined room:", String(userId));
       console.log("User socket added:", socket.id);
@@ -170,10 +186,17 @@ export const initAppSocket = (io: Server) => {
 
       ringingUsers.set(callerId, receiverId);
 
-      emitToUser(io, receiverId, SOCKET_EVENTS.CALL_OFFER, {
-        offer,
-        caller,
-      });
+      const receiverSockets = userSockets.get(receiverId);
+
+      if (receiverSockets && receiverSockets.size > 0) {
+        emitToUser(io, receiverId, SOCKET_EVENTS.CALL_OFFER, {
+          offer,
+          caller,
+        });
+      } else {
+        pendingCalls.set(receiverId, { offer, caller });
+        console.log("Pending call saved for:", receiverId);
+      }
     });
 
     // =========================

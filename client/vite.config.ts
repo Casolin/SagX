@@ -12,11 +12,15 @@ export default defineConfig({
       registerType: "autoUpdate",
 
       manifest: {
+        id: "/",
+
         name: "SagX",
         short_name: "SagX",
         description: "Your Favorite Management Tool",
+
         start_url: "/dashboard",
         display: "standalone",
+
         background_color: "#000000",
         theme_color: "#000000",
 

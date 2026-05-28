@@ -287,7 +287,20 @@ export const remove = async (req: Request, res: Response) => {
   const mission = await deleteMission(missionId);
 
   if (mission?.assignedTo) {
-    await releaseTechnician(mission);
+    const UserModel = (await import("../users/user.model.js")).default;
+
+    const user = await UserModel.findById(mission.assignedTo);
+
+    const stillAssigned = user?.assignedMissions?.some(
+      (m: any) => m.toString() === mission._id.toString(),
+    );
+
+    if (stillAssigned) {
+      await UserModel.findByIdAndUpdate(mission.assignedTo, {
+        $inc: { currentTasks: -1 },
+        $pull: { assignedMissions: mission._id },
+      });
+    }
   }
 
   await createActivityLog({

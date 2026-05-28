@@ -321,9 +321,33 @@ export const useCallStore = create<CallState>((set, get) => ({
     const screenAudioTrack = screenStream.getAudioTracks()[0];
 
     await sender.replaceTrack(screenTrack);
+    const audioContext = new AudioContext();
 
-    if (audioSender && screenAudioTrack) {
-      await audioSender.replaceTrack(screenAudioTrack);
+    if (audioSender) {
+      const micTrack = stream.getAudioTracks()[0];
+
+      const destination = audioContext.createMediaStreamDestination();
+
+      if (micTrack) {
+        const micStream = new MediaStream([micTrack]);
+
+        const micSource = audioContext.createMediaStreamSource(micStream);
+
+        micSource.connect(destination);
+      }
+
+      if (screenAudioTrack) {
+        const screenAudioStream = new MediaStream([screenAudioTrack]);
+
+        const screenSource =
+          audioContext.createMediaStreamSource(screenAudioStream);
+
+        screenSource.connect(destination);
+      }
+
+      const mixedAudioTrack = destination.stream.getAudioTracks()[0];
+
+      await audioSender.replaceTrack(mixedAudioTrack);
     }
 
     screenTrack.onended = async () => {
@@ -332,6 +356,14 @@ export const useCallStore = create<CallState>((set, get) => ({
       if (fallbackTrack) {
         await sender.replaceTrack(fallbackTrack);
       }
+
+      const originalAudioTrack = stream.getAudioTracks()[0];
+
+      if (audioSender && originalAudioTrack) {
+        await audioSender.replaceTrack(originalAudioTrack);
+      }
+
+      await audioContext.close();
 
       set({
         isScreenSharing: false,

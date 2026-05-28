@@ -252,8 +252,31 @@ export const update = async (req: Request, res: Response) => {
     description: "Mission updated",
   });
 
-  await broadcastKpiUpdate();
   missionEvents.updated(mission);
+
+  const newTech = req.body.assignedTo?.toString();
+
+  if (
+    newTech &&
+    mission.assignedTo &&
+    mission.assignedTo._id.toString() === newTech
+  ) {
+    const senderName = (req as any).user?.firstName?.trim() || "Someone";
+
+    const notification = await createNotification({
+      userId: newTech,
+      title: "Mission Reassigned",
+      message: `${senderName} reassigned a mission to you`,
+      type: "MISSION",
+      relatedId: mission._id,
+    });
+
+    emitToUser(newTech, SOCKET_EVENTS.NOTIFICATION_NEW, notification);
+
+    emitToUser(newTech, SOCKET_EVENTS.MISSION_CREATED, mission);
+  }
+
+  await broadcastKpiUpdate();
 
   return res.json({ success: true, data: mission });
 };

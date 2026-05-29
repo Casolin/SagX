@@ -34,7 +34,9 @@ export default function AlertSelector({
     setMachineId(machineId);
   };
 
-  const filteredAlerts = alerts.filter((a) => a.status === "OPEN");
+  const filteredAlerts = alerts.filter(
+    (a) => a.status === "OPEN" || a._id === alertId,
+  );
 
   return (
     <select

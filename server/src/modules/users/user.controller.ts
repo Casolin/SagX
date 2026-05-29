@@ -8,7 +8,7 @@ import {
   deleteUser,
   getAvailableTechnicians,
 } from "./user.service.js";
-import { createActivityLog } from "../logs/activitylog.service.js";
+
 import { AppError } from "../../utils/AppError.js";
 import {
   generateTwoFactorSecret,
@@ -22,14 +22,6 @@ export const profile = async (req: Request, res: Response) => {
 
   try {
     const user = await getProfile(userId);
-
-    await createActivityLog({
-      userId,
-      action: "PROFILE_VIEWED",
-      entityType: "USER",
-      entityId: userId,
-      description: "User viewed their profile",
-    });
 
     res.json({
       success: true,
@@ -56,14 +48,6 @@ export const updateProfileController = async (req: Request, res: Response) => {
 
   try {
     const updatedUser = await updateProfile(userId, updatedFields);
-
-    await createActivityLog({
-      userId,
-      action: "PROFILE_UPDATED",
-      entityType: "USER",
-      entityId: userId,
-      description: "User updated their profile",
-    });
 
     res.json({
       success: true,
@@ -106,14 +90,6 @@ export const modifyAvatarController = async (req: Request, res: Response) => {
     console.log("File Path: ", avatarFile.tempFilePath);
 
     const updatedUser = await modifyAvatar(userId, avatarFile);
-
-    await createActivityLog({
-      userId,
-      action: "PROFILE_AVATAR_UPDATED",
-      entityType: "USER",
-      entityId: userId,
-      description: "User updated their avatar",
-    });
 
     res.json({
       success: true,

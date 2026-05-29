@@ -11,7 +11,6 @@ import {
 import { emitToUser } from "../../sockets/socket.service.js";
 import { SOCKET_EVENTS } from "../../sockets/socket.events.js";
 
-import { createActivityLog } from "../logs/activitylog.service.js";
 import { createNotification } from "../notification/notification.service.js";
 import {
   broadcastFriendRequest,
@@ -33,14 +32,6 @@ export const sendFriendRequest = async (req: Request, res: Response) => {
     }
 
     const result = await sendRequest(userId, recipientId);
-
-    await createActivityLog({
-      userId,
-      action: "FRIEND_REQUEST_SENT",
-      entityType: "USER",
-      entityId: recipientId,
-      description: `Friend request sent to ${recipientId}`,
-    });
 
     const notification = await createNotification({
       userId: recipientId,
@@ -71,14 +62,6 @@ export const getPendingFriendRequests = async (req: Request, res: Response) => {
 
     const pendingRequests = await getPendingRequests(userId);
 
-    await createActivityLog({
-      userId,
-      action: "VIEW_PENDING_FRIEND_REQUESTS",
-      entityType: "USER",
-      entityId: userId,
-      description: `Viewed pending friend requests`,
-    });
-
     res.json({ success: true, data: pendingRequests });
   } catch (err: any) {
     res.status(500).json({
@@ -104,14 +87,6 @@ export const acceptFriendRequest = async (req: Request, res: Response) => {
     }
 
     const result = await acceptRequest(requestId, userId);
-
-    await createActivityLog({
-      userId,
-      action: "FRIEND_REQUEST_ACCEPTED",
-      entityType: "FRIEND_REQUEST",
-      entityId: requestId,
-      description: `Friend request accepted`,
-    });
 
     const notification = await createNotification({
       userId: result.requester,
@@ -157,14 +132,6 @@ export const rejectFriendRequest = async (req: Request, res: Response) => {
 
     const result = await rejectRequest(requestId, userId);
 
-    await createActivityLog({
-      userId,
-      action: "FRIEND_REQUEST_REJECTED",
-      entityType: "FRIEND_REQUEST",
-      entityId: requestId,
-      description: `Friend request rejected`,
-    });
-
     await broadcastFriendReject({
       requester: result.requester,
       rejectedBy: userId,
@@ -195,14 +162,6 @@ export const removeFriend = async (req: Request, res: Response) => {
     }
 
     const result = await deleteFriend(userId, friendId);
-
-    await createActivityLog({
-      userId,
-      action: "FRIEND_REMOVED",
-      entityType: "USER",
-      entityId: friendId,
-      description: `Friend removed`,
-    });
 
     await broadcastFriendRemove({
       userId,

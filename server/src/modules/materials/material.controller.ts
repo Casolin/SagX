@@ -6,19 +6,9 @@ import {
   updateMaterialStock,
 } from "./material.service.js";
 
-import { createActivityLog } from "../logs/activitylog.service.js";
-
 export const create = async (req: Request, res: Response) => {
   try {
     const material = await createMaterial(req.body);
-
-    await createActivityLog({
-      userId: (req as any).user?.id,
-      action: "MATERIAL_CREATED",
-      entityType: "MATERIAL",
-      entityId: material._id,
-      description: `Material ${material.name} created`,
-    });
 
     res.status(201).json({
       success: true,

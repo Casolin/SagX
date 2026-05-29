@@ -5,7 +5,6 @@ import {
   requestPasswordReset,
   resetPassword,
 } from "./auth.service.js";
-import { createActivityLog } from "../logs/activitylog.service.js";
 import { generateAccessToken, verifyRefreshToken } from "../../utils/jwt.js";
 import { sendEmail } from "../../utils/email.js";
 import { conversations } from "../ai/assistant/assistant.controller.js";
@@ -16,14 +15,6 @@ export const register = async (req: Request, res: Response) => {
 
     const userWithoutPassword = user.toObject();
     const { password, ...userDataWithoutPassword } = userWithoutPassword;
-
-    await createActivityLog({
-      userId: user._id,
-      action: "USER_REGISTERED",
-      entityType: "USER",
-      entityId: user._id,
-      description: "User registered successfully",
-    });
 
     res.status(201).json({
       success: true,
@@ -43,14 +34,6 @@ export const login = async (req: Request, res: Response) => {
     const { email, password, twoFactorToken } = req.body;
 
     const result = await loginUser({ email, password, twoFactorToken });
-
-    await createActivityLog({
-      userId: result.user._id,
-      action: "USER_LOGIN",
-      entityType: "USER",
-      entityId: result.user._id,
-      description: "User logged in",
-    });
 
     res.cookie("refresh_token", result.refreshToken, {
       httpOnly: true,

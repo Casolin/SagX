@@ -6,7 +6,7 @@ import {
   removeMember,
   deleteRoomService,
 } from "./room.service.js";
-import { createActivityLog } from "../logs/activitylog.service.js";
+
 import { createNotification } from "../notification/notification.service.js";
 
 import { emitToUser } from "../../sockets/socket.service.js";
@@ -32,14 +32,6 @@ export const create = async (req: Request, res: Response) => {
 
     const room = await createRoom(name, members, userId);
 
-    await createActivityLog({
-      userId,
-      action: "ROOM_CREATED",
-      entityType: "ROOM",
-      entityId: room._id,
-      description: `Room "${name}" created`,
-    });
-
     res.json({ success: true, data: room });
   } catch (err: any) {
     res.status(400).json({
@@ -53,14 +45,6 @@ export const myRooms = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
     const rooms = await getMyRooms(userId);
-
-    await createActivityLog({
-      userId,
-      action: "ROOMS_VIEWED",
-      entityType: "USER",
-      entityId: userId,
-      description: "Viewed rooms list",
-    });
 
     res.json({ success: true, data: rooms });
   } catch (err: any) {
@@ -85,14 +69,6 @@ export const join = async (req: Request, res: Response) => {
     const userId = (req as any).user.id;
 
     const room = await addMember(roomId, userId);
-
-    await createActivityLog({
-      userId,
-      action: "ROOM_JOINED",
-      entityType: "ROOM",
-      entityId: roomId,
-      description: `Joined room`,
-    });
 
     const notification = await createNotification({
       userId,
@@ -128,14 +104,6 @@ export const leave = async (req: Request, res: Response) => {
 
     const room = await removeMember(roomId, userId);
 
-    await createActivityLog({
-      userId,
-      action: "ROOM_LEFT",
-      entityType: "ROOM",
-      entityId: roomId,
-      description: `Left room`,
-    });
-
     const notification = await createNotification({
       userId,
       title: "Room Left",
@@ -169,14 +137,6 @@ export const deleteRoom = async (req: Request, res: Response) => {
     const userId = (req as any).user.id;
 
     await deleteRoomService(roomId, userId);
-
-    await createActivityLog({
-      userId,
-      action: "ROOM_DELETED",
-      entityType: "ROOM",
-      entityId: roomId,
-      description: `Deleted room`,
-    });
 
     const notification = await createNotification({
       userId,

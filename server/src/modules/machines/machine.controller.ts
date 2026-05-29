@@ -220,6 +220,41 @@ export const updateStatus = async (req: any, res: Response) => {
       return res.json({ success: true, data: machine });
     }
 
+    // ===============================
+    // 1. GET ALL OPEN ALERTS
+    // ===============================
+    const openAlerts = await Alert.find({
+      machine: machine._id,
+      status: { $ne: "RESOLVED" },
+    }).sort({ createdAt: -1 });
+
+    let alert = openAlerts[0];
+
+    // ===============================
+    // 2. BLOCK INVALID STATUS CHANGE
+    // ===============================
+    if ((status === "DOWN" || status === "MAINTENANCE") && !alert) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot change machine status without an active alert",
+      });
+    }
+
+    // ===============================
+    // 3. AUTO CREATE ALERT IF NONE
+    // ===============================
+    if (!alert) {
+      alert = await Alert.create({
+        machine: machine._id,
+        type: alertType,
+        message,
+        status: "OPEN",
+      });
+    }
+
+    // ===============================
+    // 4. PREVENT DUPLICATE MISSIONS
+    // ===============================
     const existingMission = await Mission.findOne({
       machine: machine._id,
       status: { $in: ["PENDING", "ASSIGNED", "IN_PROGRESS"] },
@@ -232,6 +267,9 @@ export const updateStatus = async (req: any, res: Response) => {
       });
     }
 
+    // ===============================
+    // 5. MATERIALS
+    // ===============================
     let materials: any[] = [];
     try {
       materials = await resolveMaterials(failureType, machine.type);
@@ -241,12 +279,9 @@ export const updateStatus = async (req: any, res: Response) => {
 
     const tasks = buildTasks(alertType, machine);
 
-    const existingAlert = await Alert.findOne({
-      machine: machine._id,
-      missionId: null,
-      status: { $ne: "RESOLVED" },
-    }).sort({ createdAt: -1 });
-
+    // ===============================
+    // 6. CREATE MISSION
+    // ===============================
     const mission = await createMission(
       {
         title: `${alertType} - ${machine.name}`,
@@ -262,19 +297,22 @@ export const updateStatus = async (req: any, res: Response) => {
         machineType: machine.type,
         condition,
         failureType,
-        // @ts-ignore: Type 'ObjectId | undefined' is not assignable to type 'string | undefined'.
-        alertId: existingAlert?._id,
+        alertId: alert._id.toString(),
         source: "AUTO",
       },
       userId,
     );
 
-    if (existingAlert) {
-      existingAlert.missionId = mission._id;
-      existingAlert.status = "IN_PROGRESS";
-      await existingAlert.save();
-    }
+    // ===============================
+    // 7. LOCK ALERT → IN_PROGRESS
+    // ===============================
+    alert.missionId = mission._id;
+    alert.status = "IN_PROGRESS";
+    await alert.save();
 
+    // ===============================
+    // 8. TECHNICIAN ASSIGNMENT
+    // ===============================
     const techniciansFromDB = await User.find({
       role: "TECHNICIAN",
       availability: true,
@@ -315,7 +353,6 @@ export const updateStatus = async (req: any, res: Response) => {
       }
     } catch {}
 
-    // ✅ fallback
     if (!assignedTech) {
       const fallback = cleanedTechnicians[0];
       if (!fallback) {
@@ -327,12 +364,10 @@ export const updateStatus = async (req: any, res: Response) => {
       assignedTech = { id: fallback.id };
     }
 
-    // ✅ assign mission
     mission.assignedTo = assignedTech.id;
     mission.status = "ASSIGNED";
     await mission.save();
 
-    // ✅ update user workload
     const updatedUser = await User.findByIdAndUpdate(
       assignedTech.id,
       {

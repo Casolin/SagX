@@ -86,8 +86,14 @@ export default function EditMachinePage() {
 
       toast.success("Machine updated successfully");
       navigate("/machines");
-    } catch {
-      toast.error("Failed to update machine");
+      //eslint-disable-next-line
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to update machine";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }

@@ -16,7 +16,7 @@ import { SOCKET_EVENTS } from "../../sockets/socket.events.js";
 import { consumeMaterials } from "../materials/material.service.js";
 
 import Alert from "../alert/alert.model.js";
-import { createActivityLog } from "../logs/activitylog.service.js";
+
 import { createNotification } from "../notification/notification.service.js";
 import { missionEvents } from "../../utils/mission.helper.js";
 
@@ -186,14 +186,6 @@ export const create = async (req: Request, res: Response) => {
         (updatedUser?.currentTasks ?? 0) < (updatedUser?.maxTasks ?? 5),
     });
 
-    await createActivityLog({
-      userId: user.id,
-      action: "MISSION_CREATED",
-      entityType: "MISSION",
-      entityId: mission._id,
-      description: "Mission created",
-    });
-
     const senderName = user?.firstName?.trim() ? user.firstName : "Someone";
 
     const notification = await createNotification({
@@ -243,14 +235,6 @@ export const update = async (req: Request, res: Response) => {
       message: "Mission not found",
     });
   }
-
-  await createActivityLog({
-    userId: (req as any).user.id,
-    action: "MISSION_UPDATED",
-    entityType: "MISSION",
-    entityId: mission._id,
-    description: "Mission updated",
-  });
 
   missionEvents.updated(mission);
 
@@ -302,14 +286,6 @@ export const remove = async (req: Request, res: Response) => {
       });
     }
   }
-
-  await createActivityLog({
-    userId: (req as any).user.id,
-    action: "MISSION_DELETED",
-    entityType: "MISSION",
-    entityId: missionId,
-    description: "Mission deleted",
-  });
 
   await broadcastKpiUpdate();
   missionEvents.deleted(mission);
@@ -425,13 +401,6 @@ export const updateTaskStatus = async (req: Request, res: Response) => {
 
     await mission.save();
 
-    await createActivityLog({
-      userId: (req as any).user.id,
-      action: "TASK_UPDATED",
-      entityType: "MISSION",
-      entityId: mission._id,
-      description: `Task ${taskId} updated`,
-    });
     await broadcastKpiUpdate();
     missionEvents.updated(mission);
 

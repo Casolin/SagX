@@ -10,7 +10,6 @@ import roomRoutes from "./modules/room/room.routes.js";
 import chatRoutes from "./modules/message/message.routes.js";
 import assistantRoutes from "./modules/ai/assistant/assistant.routes.js";
 import notificationRoutes from "./modules/notification/notification.routes.js";
-import logRoutes from "./modules/logs/activitylog.routes.js";
 import alertRoutes from "./modules/alert/alert.routes.js";
 import machineRoutes from "./modules/machines/machine.routes.js";
 import cookieParser from "cookie-parser";
@@ -49,8 +48,6 @@ app.use("/api/chat/message", chatRoutes);
 app.use("/api/ai", assistantRoutes);
 
 app.use("/api/notification", notificationRoutes);
-
-app.use("/api/logs", logRoutes);
 
 app.use("/api/alerts", alertRoutes);
 

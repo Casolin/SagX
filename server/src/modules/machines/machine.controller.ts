@@ -190,13 +190,13 @@ export const updateStatus = async (req: any, res: Response) => {
     const openAlerts = await Alert.find({
       machine: machine._id,
       status: { $ne: "RESOLVED" },
-    });
+    }).sort({ createdAt: -1 });
 
-    const hasAlert = openAlerts.length > 0;
+    const activeAlert = openAlerts[0];
 
     if (
       (req.body.status === "DOWN" || req.body.status === "MAINTENANCE") &&
-      !hasAlert
+      !activeAlert
     ) {
       return res.status(400).json({
         success: false,
@@ -259,11 +259,10 @@ export const updateStatus = async (req: any, res: Response) => {
 
     const tasks = buildTasks(alertType, machine);
 
-    const existingAlert = await Alert.findOne({
-      machine: machine._id,
-      missionId: null,
-      status: { $ne: "RESOLVED" },
-    }).sort({ createdAt: -1 });
+    if (activeAlert) {
+      activeAlert.status = "IN_PROGRESS";
+      await activeAlert.save();
+    }
 
     const mission = await createMission(
       {
@@ -280,17 +279,16 @@ export const updateStatus = async (req: any, res: Response) => {
         machineType: machine.type,
         condition,
         failureType,
-        // @ts-ignore: Type 'ObjectId | undefined' is not assignable to type 'string | undefined'.
-        alertId: existingAlert?._id,
+        ...(activeAlert && { alertId: activeAlert._id.toString() }),
         source: "AUTO",
       },
       userId,
     );
 
-    if (existingAlert) {
-      existingAlert.missionId = mission._id;
-      existingAlert.status = "IN_PROGRESS";
-      await existingAlert.save();
+    if (activeAlert) {
+      activeAlert.missionId = mission._id;
+      activeAlert.status = "IN_PROGRESS";
+      await activeAlert.save();
     }
 
     const techniciansFromDB = await User.find({
@@ -319,7 +317,7 @@ export const updateStatus = async (req: any, res: Response) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          requiredSkills: mission.requiredSkills,
+          requiredSkills: [machine.type, failureType],
           technicians: cleanedTechnicians,
         }),
         signal: controller.signal,
@@ -333,7 +331,6 @@ export const updateStatus = async (req: any, res: Response) => {
       }
     } catch {}
 
-    // ✅ fallback
     if (!assignedTech) {
       const fallback = cleanedTechnicians[0];
       if (!fallback) {
@@ -345,12 +342,10 @@ export const updateStatus = async (req: any, res: Response) => {
       assignedTech = { id: fallback.id };
     }
 
-    // ✅ assign mission
     mission.assignedTo = assignedTech.id;
     mission.status = "ASSIGNED";
     await mission.save();
 
-    // ✅ update user workload
     const updatedUser = await User.findByIdAndUpdate(
       assignedTech.id,
       {

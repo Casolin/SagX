@@ -365,7 +365,7 @@ export default function CreateMissionPage({ refresh }: Props) {
 
             <button
               onClick={resetForm}
-              className="w-full py-2.5 rounded-xl border hover:bg-zinc-50 transition"
+              className="w-full py-2.5 rounded-xl border hover:bg-zinc-50 transition cursor-pointer"
             >
               Reset
             </button>
@@ -373,7 +373,7 @@ export default function CreateMissionPage({ refresh }: Props) {
             <button
               onClick={handleCreate}
               disabled={!isValid}
-              className="w-full py-2.5 rounded-xl bg-black text-white hover:opacity-90 disabled:opacity-40 transition"
+              className="w-full py-2.5 rounded-xl bg-black text-white hover:opacity-90 disabled:opacity-40 transition cursor-pointer"
             >
               Create Mission
             </button>

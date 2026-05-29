@@ -405,14 +405,14 @@ export default function EditMissionPage() {
 
             <button
               onClick={handleUpdate}
-              className="w-full py-2.5 rounded-xl bg-black text-white hover:opacity-90 transition"
+              className="w-full py-2.5 rounded-xl bg-black text-white hover:opacity-90 transition cursor-pointer"
             >
               Update Mission
             </button>
 
             <button
               onClick={() => navigate("/missions")}
-              className="w-full py-2.5 rounded-xl border hover:bg-zinc-50 transition"
+              className="w-full py-2.5 rounded-xl border hover:bg-zinc-50 transition cursor-pointer"
             >
               Cancel
             </button>

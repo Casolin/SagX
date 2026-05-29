@@ -225,7 +225,7 @@ export default function EditMachinePage() {
           <div className="flex gap-3">
             <button
               onClick={() => navigate("/machines")}
-              className="w-1/2 py-2.5 rounded-xl border hover:bg-zinc-50 transition"
+              className="w-1/2 py-2.5 rounded-xl border hover:bg-zinc-50 transition cursor-pointer"
             >
               Cancel
             </button>
@@ -233,7 +233,7 @@ export default function EditMachinePage() {
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-1/2 py-2.5 rounded-xl bg-black text-white hover:opacity-90 disabled:opacity-40 transition"
+              className="w-1/2 py-2.5 rounded-xl bg-black text-white hover:opacity-90 disabled:opacity-40 transition cursor-pointer"
             >
               {loading ? "Updating..." : "Update Machine"}
             </button>

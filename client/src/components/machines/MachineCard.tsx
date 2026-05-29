@@ -69,38 +69,38 @@ export default function MachineCard({ machine, refresh }: Props) {
     <>
       <div
         onClick={handleOpenEditPage}
-        className="group relative flex flex-col justify-between rounded-2xl border border-gray-200 bg-white
-      p-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+        className="group relative flex flex-col justify-between rounded-3xl border border-gray-200/70 bg-white
+      shadow-sm hover:shadow-[0_18px_50px_rgba(0,0,0,0.10)]
+      transition-all duration-300 hover:-translate-y-1 cursor-pointer"
       >
-        {/* HEADER */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="text-base font-semibold text-gray-900 truncate group-hover:text-blue-600 transition">
-              {machine.name}
-            </h2>
+        <div className="p-5 flex flex-col gap-4">
+          {/* HEADER */}
+          <div className="flex items-start justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition">
+                {machine.name}
+              </h2>
 
-            <p className="text-xs text-gray-400 mt-0.5">
-              {machine.type || "No type"}
-            </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {machine.type || "No type"}
+              </p>
+            </div>
+
+            <span
+              className={`text-[11px] px-3 py-1 rounded-full font-semibold text-white shadow-sm ${
+                statusStyle[machine.status]
+              }`}
+            >
+              {machine.status}
+            </span>
           </div>
 
-          <span
-            className={`shrink-0 text-[11px] px-2.5 py-1 rounded-full font-medium text-white ${
-              statusStyle[machine.status]
-            }`}
-          >
-            {machine.status}
-          </span>
-        </div>
-
-        {/* BODY */}
-        <div className="mt-3 space-y-2">
-          {/* CONDITION + FAILURE ROW */}
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
-              <span className="text-gray-400">Condition</span>
+          {/* BODY */}
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
+              <p className="text-[11px] text-gray-400">Condition</p>
               <span
-                className={`px-2 py-0.5 rounded-md font-medium ${
+                className={`inline-block mt-1 px-2 py-1 rounded-md text-xs font-semibold ${
                   conditionStyle[machine.condition]
                 }`}
               >
@@ -108,41 +108,42 @@ export default function MachineCard({ machine, refresh }: Props) {
               </span>
             </div>
 
-            {machine.failureType && (
-              <span className="text-gray-500 truncate max-w-[50%] text-right">
-                {machine.failureType}
-              </span>
-            )}
+            <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
+              <p className="text-[11px] text-gray-400">Failure</p>
+              <p className="mt-1 font-medium text-gray-800 text-sm">
+                {machine.failureType || "-"}
+              </p>
+            </div>
           </div>
 
-          {/* LOCATION */}
+          {/* LOCATION (moved down ✔) */}
           {machine.location && (
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <span className="text-gray-400">Location:</span>
-              <span className="truncate">{machine.location}</span>
+            <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-3">
+              <p className="text-[11px] text-gray-400">Location</p>
+              <p className="mt-1 text-sm font-medium text-gray-700">
+                {machine.location}
+              </p>
             </div>
           )}
 
           {/* DESCRIPTION */}
           {machine.description && (
-            <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mt-1">
+            <p className="text-xs text-gray-500 leading-relaxed border-t border-gray-100 pt-3">
               {machine.description}
             </p>
           )}
-        </div>
 
-        {/* FOOTER */}
-        {(canEdit || canDelete) && (
-          <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end gap-2">
+          {/* FOOTER */}
+          <div className="flex justify-end gap-2 border-t border-gray-100 pt-3">
             {canEdit && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setOpenEdit(true);
                 }}
-                className="p-2 rounded-xl hover:bg-blue-50 text-blue-600 transition"
+                className="p-2 rounded-xl text-blue-600 hover:bg-blue-50 transition"
               >
-                <SlidersHorizontal size={17} />
+                <SlidersHorizontal size={18} />
               </button>
             )}
 
@@ -152,16 +153,15 @@ export default function MachineCard({ machine, refresh }: Props) {
                   e.stopPropagation();
                   setOpenDelete(true);
                 }}
-                className="p-2 rounded-xl hover:bg-red-50 text-red-500 transition"
+                className="p-2 rounded-xl text-red-500 hover:bg-red-50 transition"
               >
-                <Trash2 size={17} />
+                <Trash2 size={18} />
               </button>
             )}
           </div>
-        )}
+        </div>
       </div>
 
-      {/* MODALS */}
       {canEdit && (
         <EditMachineStatusModal
           open={openEdit}

@@ -34,9 +34,7 @@ export default function AlertSelector({
     setMachineId(machineId);
   };
 
-  const filteredAlerts = alerts.filter(
-    (a) => a.status === "OPEN" || a.status === "IN_PROGRESS",
-  );
+  const filteredAlerts = alerts.filter((a) => a.status === "OPEN");
 
   return (
     <select

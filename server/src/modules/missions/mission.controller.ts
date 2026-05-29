@@ -54,6 +54,13 @@ export const create = async (req: Request, res: Response) => {
   try {
     const user = (req as any).user;
 
+    if (!Array.isArray(req.body.materials) || req.body.materials.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one material should be selected",
+      });
+    }
+
     if (req.body.machine) {
       const existingMission = await Mission.findOne({
         machine: req.body.machine,

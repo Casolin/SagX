@@ -42,7 +42,7 @@ export default function AlertSelector({
       onChange={(e) => handleChange(e.target.value)}
       className="w-full border rounded-lg px-3 py-2"
     >
-      <option value="">Select alert (optional)</option>
+      <option value="">Select alert</option>
 
       {filteredAlerts.map((a) => (
         <option key={a._id} value={a._id}>

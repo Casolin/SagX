@@ -85,7 +85,13 @@ export default function EditMissionPage() {
 
         setMachineId(typeof machine === "string" ? machine : machine._id || "");
 
-        setAlertId(missionData.alertId || "");
+        const alert =
+          typeof missionData.alertId === "string"
+            ? missionData.alertId
+            : //eslint-disable-next-line
+              (missionData.alertId as any)?._id || "";
+
+        setAlertId(alert);
 
         setPriority(missionData.priority || "MEDIUM");
         setStatus(missionData.status || "PENDING");

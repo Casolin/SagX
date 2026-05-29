@@ -5,12 +5,6 @@ import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
 import { ArrowLeftToLine } from "lucide-react";
 
-import type {
-  FailureType,
-  MachineStatus,
-  MachineCondition,
-} from "../types/global.types";
-
 export default function EditMachinePage() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -18,7 +12,6 @@ export default function EditMachinePage() {
 
   const isAdmin = user?.role === "ADMIN";
   const isManager = user?.role === "MANAGER";
-
   const canEdit = isAdmin || isManager;
 
   const [loading, setLoading] = useState(false);
@@ -29,10 +22,6 @@ export default function EditMachinePage() {
     type: "",
     location: "",
     description: "",
-
-    failureType: "NONE" as FailureType,
-    status: "OK" as MachineStatus,
-    condition: "NORMAL" as MachineCondition,
   });
 
   /* ================= LOAD MACHINE ================= */
@@ -48,9 +37,6 @@ export default function EditMachinePage() {
           type: data.type || "",
           location: data.location || "",
           description: data.description || "",
-          failureType: data.failureType,
-          status: data.status,
-          condition: data.condition,
         });
       } catch {
         toast.error("Failed to load machine");
@@ -64,9 +50,7 @@ export default function EditMachinePage() {
 
   /* ================= HANDLERS ================= */
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -81,21 +65,16 @@ export default function EditMachinePage() {
 
     try {
       setLoading(true);
-
-      // call API
       await updateMachine(id, form);
-
       toast.success("Machine updated successfully");
       navigate("/machines");
       //eslint-disable-next-line
     } catch (err: any) {
-      // Show backend response
       const message =
         err?.response?.data?.message ||
         err?.message ||
         "Failed to update machine";
-
-      toast.error(message); // will show "Cannot set machine to DOWN/MAINTENANCE without an active alert"
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -130,7 +109,6 @@ export default function EditMachinePage() {
           <h1 className="text-sm font-semibold tracking-wide text-zinc-800">
             Edit Machine
           </h1>
-
           <div />
         </div>
       </div>
@@ -174,47 +152,6 @@ export default function EditMachinePage() {
             placeholder="Location (optional)"
             className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
           />
-
-          {/* GRID */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <select
-              name="failureType"
-              value={form.failureType}
-              onChange={handleChange}
-              className="px-3 py-2 rounded-xl border bg-zinc-50"
-            >
-              <option value="NONE">NONE</option>
-              <option value="ELECTRICAL">ELECTRICAL</option>
-              <option value="MECHANICAL">MECHANICAL</option>
-              <option value="HYDRAULIC">HYDRAULIC</option>
-              <option value="SENSOR">SENSOR</option>
-              <option value="OVERHEAT">OVERHEAT</option>
-              <option value="UNKNOWN">UNKNOWN</option>
-            </select>
-
-            <select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              className="px-3 py-2 rounded-xl border bg-zinc-50"
-            >
-              <option value="OK">OK</option>
-              <option value="DOWN">DOWN</option>
-              <option value="MAINTENANCE">MAINTENANCE</option>
-            </select>
-          </div>
-
-          {/* CONDITION */}
-          <select
-            name="condition"
-            value={form.condition}
-            onChange={handleChange}
-            className="w-full px-3 py-2 rounded-xl border bg-zinc-50"
-          >
-            <option value="NORMAL">NORMAL</option>
-            <option value="ANOMALY">ANOMALY</option>
-            <option value="FAILURE">FAILURE</option>
-          </select>
 
           {/* DESCRIPTION */}
           <textarea

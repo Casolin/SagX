@@ -120,7 +120,7 @@ export default function EditAlertModal({
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-zinc-200 text-sm text-zinc-600 hover:bg-zinc-50 transition"
+              className="px-4 py-2 rounded-xl border border-zinc-200 text-sm text-zinc-600 hover:bg-zinc-50 transition cursor-pointer"
             >
               Cancel
             </button>
@@ -128,7 +128,7 @@ export default function EditAlertModal({
             <button
               onClick={handleSave}
               disabled={loading}
-              className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:opacity-90 disabled:opacity-40 transition"
+              className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:opacity-90 disabled:opacity-40 transition cursor-pointer"
             >
               {loading ? "Saving..." : "Save changes"}
             </button>

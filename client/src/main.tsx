@@ -23,9 +23,9 @@ createRoot(document.getElementById("root")!).render(
           newestOnTop={false}
           closeOnClick
           rtl={false}
-          pauseOnFocusLoss
+          pauseOnFocusLoss={false}
+          pauseOnHover={false}
           draggable
-          pauseOnHover
         />
       </AuthContextProvider>
     </BrowserRouter>

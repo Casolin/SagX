@@ -22,7 +22,7 @@ export const stopRingtone = () => {
 export const startCallingTone = () => {
   stopCallingTone();
 
-  callingTone = new Audio("/calling.mp3");
+  callingTone = new Audio("/calling.wav");
   callingTone.loop = true;
   callingTone.volume = 0.6;
 

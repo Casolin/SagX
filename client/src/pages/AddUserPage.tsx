@@ -13,11 +13,15 @@ const emptyForm = {
   email: "",
   password: "",
   role: "TECHNICIAN" as UserRole,
+  skills: [] as string[],
+  experience: 0,
+  availability: true,
 };
 
 export default function AddUserPage() {
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(false);
+  const [skillInput, setSkillInput] = useState("");
 
   const navigate = useNavigate();
 
@@ -29,6 +33,28 @@ export default function AddUserPage() {
     setForm((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const addSkill = () => {
+    const skill = skillInput.trim();
+
+    if (!skill) return;
+
+    setForm((prev) => ({
+      ...prev,
+      skills: prev.skills.includes(skill)
+        ? prev.skills
+        : [...prev.skills, skill],
+    }));
+
+    setSkillInput("");
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    setForm((prev) => ({
+      ...prev,
+      skills: prev.skills.filter((s) => s !== skillToRemove),
     }));
   };
 
@@ -105,6 +131,55 @@ export default function AddUserPage() {
             className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
           focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
           />
+
+          {/* SKILLS (CHIPS INPUT) */}
+          <div>
+            <p className="text-xs text-zinc-500 mb-1">Skills</p>
+
+            <div className="flex gap-2">
+              <input
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill();
+                  }
+                }}
+                placeholder="Add a skill"
+                className="flex-1 px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
+                focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+              />
+
+              <button
+                type="button"
+                onClick={addSkill}
+                className="px-4 py-3 rounded-xl bg-black text-white text-sm hover:opacity-90"
+              >
+                +
+              </button>
+            </div>
+
+            {/* SKILL CHIPS */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {form.skills.map((skill) => (
+                <div
+                  key={skill}
+                  className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-sm"
+                >
+                  {skill}
+
+                  <button
+                    type="button"
+                    onClick={() => removeSkill(skill)}
+                    className="text-zinc-500 hover:text-red-500"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* ROLE */}
           <div>

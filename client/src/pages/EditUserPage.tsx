@@ -13,6 +13,9 @@ const emptyForm = {
   email: "",
   password: "",
   role: "TECHNICIAN" as UserRole,
+  skills: [] as string[],
+  experience: 0,
+  availability: true,
 };
 
 export default function EditUserPage() {
@@ -20,6 +23,7 @@ export default function EditUserPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [skillInput, setSkillInput] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -42,6 +46,10 @@ export default function EditUserPage() {
           email: found.email || "",
           password: "",
           role: found.role,
+
+          skills: found.skills || [],
+          experience: found.experience || 0,
+          availability: found.availability ?? true,
         });
       } catch (err) {
         console.error("Failed to load user", err);
@@ -60,10 +68,33 @@ export default function EditUserPage() {
 
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "experience" ? Number(value) : value,
     }));
   };
 
+  // ---------------- SKILLS ----------------
+  const addSkill = () => {
+    const skill = skillInput.trim();
+    if (!skill) return;
+
+    setForm((prev) => ({
+      ...prev,
+      skills: prev.skills.includes(skill)
+        ? prev.skills
+        : [...prev.skills, skill],
+    }));
+
+    setSkillInput("");
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    setForm((prev) => ({
+      ...prev,
+      skills: prev.skills.filter((s) => s !== skillToRemove),
+    }));
+  };
+
+  // ---------------- SUBMIT ----------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -120,7 +151,7 @@ export default function EditUserPage() {
               onChange={handleChange}
               placeholder="First name"
               className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
-            focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+              focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
             />
 
             <input
@@ -129,7 +160,7 @@ export default function EditUserPage() {
               onChange={handleChange}
               placeholder="Last name"
               className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
-            focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+              focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
             />
           </div>
 
@@ -140,7 +171,7 @@ export default function EditUserPage() {
             onChange={handleChange}
             placeholder="Email address"
             className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
-          focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+            focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
           />
 
           {/* PASSWORD */}
@@ -151,8 +182,89 @@ export default function EditUserPage() {
             placeholder="Leave blank to keep current password"
             type="password"
             className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
-          focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+            focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
           />
+
+          {/* SKILLS */}
+          <div>
+            <p className="text-xs text-zinc-500 mb-1">Skills</p>
+
+            <div className="flex gap-2">
+              <input
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addSkill();
+                  }
+                }}
+                placeholder="Add skill"
+                className="flex-1 px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
+                focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+              />
+
+              <button
+                type="button"
+                onClick={addSkill}
+                className="px-4 py-3 rounded-xl bg-black text-white text-sm"
+              >
+                +
+              </button>
+            </div>
+
+            {/* chips */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {form.skills.map((skill) => (
+                <div
+                  key={skill}
+                  className="flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-sm"
+                >
+                  {skill}
+                  <button
+                    type="button"
+                    onClick={() => removeSkill(skill)}
+                    className="text-zinc-500 hover:text-red-500"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* EXPERIENCE */}
+          <div>
+            <p className="text-xs text-zinc-500 mb-1">Experience (years)</p>
+            <input
+              name="experience"
+              type="number"
+              value={form.experience}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
+              focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+            />
+          </div>
+
+          {/* AVAILABILITY */}
+          <div>
+            <p className="text-xs text-zinc-500 mb-1">Availability</p>
+
+            <select
+              value={form.availability ? "AVAILABLE" : "UNAVAILABLE"}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  availability: e.target.value === "AVAILABLE",
+                }))
+              }
+              className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
+              focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+            >
+              <option value="AVAILABLE">Available</option>
+              <option value="UNAVAILABLE">Unavailable</option>
+            </select>
+          </div>
 
           {/* ROLE */}
           <div>
@@ -163,7 +275,7 @@ export default function EditUserPage() {
               value={form.role}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50
-            focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
+              focus:bg-white focus:outline-none focus:ring-2 focus:ring-black/10"
             >
               {roles.map((role) => (
                 <option key={role} value={role}>
@@ -178,7 +290,7 @@ export default function EditUserPage() {
             <button
               type="button"
               onClick={() => navigate("/users")}
-              className="px-4 py-2 rounded-xl border border-zinc-200 text-sm text-zinc-600 hover:bg-zinc-50 transition cursor-pointer"
+              className="px-4 py-2 rounded-xl border border-zinc-200 text-sm text-zinc-600 hover:bg-zinc-50"
             >
               Cancel
             </button>
@@ -187,7 +299,7 @@ export default function EditUserPage() {
               type="submit"
               onClick={handleSubmit}
               disabled={saving}
-              className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:opacity-90 disabled:opacity-40 transition cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:opacity-90 disabled:opacity-40"
             >
               {saving ? "Updating..." : "Update User"}
             </button>

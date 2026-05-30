@@ -311,6 +311,7 @@ export default function CreateMissionPage({ refresh }: Props) {
               <option>PENDING</option>
               <option>ASSIGNED</option>
               <option>IN_PROGRESS</option>
+              <option>COMPLETED</option>
               <option>CANCELLED</option>
             </select>
           </div>

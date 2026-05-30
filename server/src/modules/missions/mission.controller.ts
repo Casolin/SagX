@@ -267,6 +267,44 @@ export const update = async (req: Request, res: Response) => {
     emitToUser(newTech, SOCKET_EVENTS.MISSION_CREATED, mission);
   }
 
+  /* ============================
+     🔥 ADD THIS BLOCK (IMPORTANT)
+     ============================ */
+  if (
+    mission.assignedTo &&
+    (req.body.status === "COMPLETED" || req.body.status === "CANCELLED")
+  ) {
+    const UserModel = (await import("../users/user.model.js")).default;
+
+    const assignedToId =
+      typeof mission.assignedTo === "string"
+        ? mission.assignedTo
+        : mission.assignedTo._id?.toString() || mission.assignedTo;
+
+    // prevent double mismatch
+    const user = await UserModel.findById(assignedToId);
+
+    const stillAssigned = user?.assignedMissions?.some(
+      (m: any) => m.toString() === mission._id.toString(),
+    );
+
+    if (stillAssigned) {
+      await UserModel.findByIdAndUpdate(assignedToId, {
+        $inc: { currentTasks: -1 },
+        $pull: { assignedMissions: mission._id },
+      });
+    }
+
+    // availability fix
+    const updatedUser = await UserModel.findById(assignedToId);
+    if (updatedUser) {
+      await UserModel.findByIdAndUpdate(assignedToId, {
+        availability:
+          (updatedUser.currentTasks ?? 0) < (updatedUser.maxTasks ?? 5),
+      });
+    }
+  }
+
   await broadcastKpiUpdate();
 
   return res.json({ success: true, data: mission });

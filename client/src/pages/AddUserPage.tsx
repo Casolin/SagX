@@ -14,7 +14,7 @@ const emptyForm = {
   password: "",
   role: "TECHNICIAN" as UserRole,
   skills: [] as string[],
-  experience: 0,
+  experience: 1,
   availability: true as boolean,
 };
 
@@ -134,7 +134,7 @@ export default function AddUserPage() {
 
           {/* EXPERIENCE */}
           <div>
-            <p className="text-xs text-zinc-500 mb-1">Experience (years)</p>
+            <p className="text-xs text-zinc-500 mb-1">Experience</p>
 
             <input
               name="experience"
@@ -194,7 +194,7 @@ export default function AddUserPage() {
               <button
                 type="button"
                 onClick={addSkill}
-                className="px-4 py-3 rounded-xl bg-black text-white text-sm hover:opacity-90"
+                className="px-4 py-3 rounded-xl bg-black text-white text-sm hover:opacity-90 cursor-pointer"
               >
                 +
               </button>
@@ -244,7 +244,7 @@ export default function AddUserPage() {
             <button
               type="button"
               onClick={() => navigate("/users")}
-              className="px-4 py-2 rounded-xl border border-zinc-200 text-sm text-zinc-600 hover:bg-zinc-50"
+              className="px-4 py-2 rounded-xl border border-zinc-200 text-sm text-zinc-600 hover:bg-zinc-50 cursor-pointer"
             >
               Cancel
             </button>
@@ -253,7 +253,7 @@ export default function AddUserPage() {
               type="submit"
               disabled={loading}
               onClick={handleSubmit}
-              className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:opacity-90 disabled:opacity-40"
+              className="px-4 py-2 rounded-xl bg-black text-white text-sm hover:opacity-90 disabled:opacity-40 cursor-pointer"
             >
               {loading ? "Creating..." : "Create User"}
             </button>

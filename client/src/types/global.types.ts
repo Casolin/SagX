@@ -227,7 +227,6 @@ export type MissionStatus =
   | "PENDING"
   | "ASSIGNED"
   | "IN_PROGRESS"
-  | "COMPLETED"
   | "CANCELLED";
 
 export interface MissionMaterial {

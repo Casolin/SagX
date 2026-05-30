@@ -246,15 +246,12 @@ export const update = async (req: Request, res: Response) => {
   missionEvents.updated(mission);
 
   const newTech = req.body.assignedTo?.toString();
-  const oldTech = mission.assignedTo?._id.toString();
 
-  // If there's a previous technician and it's different from the new one, emit MISSION_DELETED
-  if (oldTech && oldTech !== newTech) {
-    emitToUser(oldTech, SOCKET_EVENTS.MISSION_DELETED, mission);
-  }
-
-  // If assigned to a technician (new or same), send notification and mission_created
-  if (newTech) {
+  if (
+    newTech &&
+    mission.assignedTo &&
+    mission.assignedTo._id.toString() === newTech
+  ) {
     const senderName = (req as any).user?.firstName?.trim() || "Someone";
 
     const notification = await createNotification({
@@ -266,6 +263,7 @@ export const update = async (req: Request, res: Response) => {
     });
 
     emitToUser(newTech, SOCKET_EVENTS.NOTIFICATION_NEW, notification);
+
     emitToUser(newTech, SOCKET_EVENTS.MISSION_CREATED, mission);
   }
 

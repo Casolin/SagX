@@ -247,7 +247,7 @@ export interface Mission {
   failureType?: FailureType;
   condition?: MachineCondition;
 
-  status?: MissionStatus;
+  status: MissionStatus;
   cancellationReason?: string | null;
 
   priority: Priority;

@@ -20,13 +20,6 @@ export default function UserCard({ user, onEdit, onDelete }: Props) {
     TECHNICIAN: "bg-gray-800 text-white",
   }[user.role];
 
-  const statusColor =
-    {
-      ACTIVE: "bg-green-500 text-white",
-      INACTIVE: "bg-gray-400 text-white",
-      SUSPENDED: "bg-red-500 text-white",
-    }[user.status] || "bg-gray-300 text-black";
-
   const handleDelete = async () => {
     try {
       setLoading(true);
@@ -66,6 +59,15 @@ export default function UserCard({ user, onEdit, onDelete }: Props) {
               src={user.avatar}
               className="w-12 h-12 rounded-full border object-cover"
             />
+            <span
+              className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${
+                user.status === "ACTIVE"
+                  ? "bg-green-500"
+                  : user.status === "SUSPENDED"
+                  ? "bg-red-500"
+                  : "bg-gray-400"
+              }`}
+            />
           </div>
 
           {/* info */}
@@ -83,12 +85,6 @@ export default function UserCard({ user, onEdit, onDelete }: Props) {
                 className={`text-[11px] px-2.5 py-1 rounded-full font-medium ${roleColor}`}
               >
                 {user.role}
-              </span>
-
-              <span
-                className={`text-[11px] px-2.5 py-1 rounded-full font-medium ${statusColor}`}
-              >
-                {user.status}
               </span>
             </div>
           </div>

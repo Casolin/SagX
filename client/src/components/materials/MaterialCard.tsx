@@ -3,6 +3,7 @@ import type { Material } from "../../types/global.types";
 import { updateMaterialStock, deleteMaterial } from "../../api/material.api";
 import { Trash2 } from "lucide-react";
 import ConfirmModal from "../ConfirmModal";
+import { toast } from "react-toastify";
 
 interface Props {
   material: Material;
@@ -41,9 +42,11 @@ const MaterialCard = ({ material }: Props) => {
       await deleteMaterial(material._id);
 
       setDeleteOpen(false);
+      toast.info("Material deleted successfully");
+      window.location.reload();
     } catch (err) {
       console.error(err);
-      alert("Failed to delete material");
+      toast.error("Failed to delete material");
     } finally {
       setDeleteLoading(false);
     }

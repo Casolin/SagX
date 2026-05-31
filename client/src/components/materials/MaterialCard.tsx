@@ -4,7 +4,6 @@ import { updateMaterialStock, deleteMaterial } from "../../api/material.api";
 import { Trash2 } from "lucide-react";
 import ConfirmModal from "../ConfirmModal";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   material: Material;
@@ -16,7 +15,7 @@ const MaterialCard = ({ material }: Props) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [quantity, setQuantity] = useState(material.quantity);
-  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -45,7 +44,7 @@ const MaterialCard = ({ material }: Props) => {
 
       setDeleteOpen(false);
       toast.info("Material deleted successfully");
-      navigate("/materials");
+      window.location.reload();
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete material");

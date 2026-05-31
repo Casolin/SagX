@@ -77,7 +77,7 @@ export default function NotificationPanel() {
   return (
     <>
       {open && (
-        <div onClick={closePanel} className="fixed inset-0 bg-black/20 z-40" />
+        <div onClick={closePanel} className="fixed inset-0 bg-black/20 z-120" />
       )}
 
       {/* PANEL */}

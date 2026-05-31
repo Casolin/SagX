@@ -4,12 +4,13 @@ import User from "../modules/users/user.model.js";
 import QRCode from "qrcode";
 
 export const generateTwoFactorSecret = async (userId: string) => {
+  const user = await User.findById(userId);
+
   const secret = speakeasy.generateSecret({
     length: 20,
-    name: process.env["TWOFA_ISSUER"],
+    name: `${process.env.TWOFA_ISSUER} : ${user!.email}`,
+    issuer: process.env.TWOFA_ISSUER,
   });
-
-  const user = await User.findById(userId);
 
   if (!user) {
     throw new AppError("User not found", 404);

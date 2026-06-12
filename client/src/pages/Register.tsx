@@ -150,6 +150,7 @@ export default function Register() {
               required
             />
 
+            {/* BUTTON */}
             <button
               disabled={loading}
               type="submit"
@@ -159,16 +160,16 @@ export default function Register() {
               {loading ? "Creating account..." : "Create Account"}
             </button>
 
-            <div className="text-center text-sm text-gray-500">
+            {/* LOGIN LINK */}
+            <p className="text-center text-sm text-gray-500">
               Already have an account?{" "}
-              <button
-                type="button"
-                onClick={() => navigate("/login")}
+              <a
+                href="/login"
                 className="font-semibold text-black hover:underline"
               >
                 Sign in
-              </button>
-            </div>
+              </a>
+            </p>
           </form>
         </div>
       </div>

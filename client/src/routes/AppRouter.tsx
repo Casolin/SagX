@@ -28,11 +28,13 @@ import MaterialsPage from "../pages/MaterialsPage";
 import CreateMachinePage from "../pages/CreateMachinePage";
 import { CallPage } from "../pages/CallPage";
 import DownloadMobile from "../pages/DownloadMobile";
+import Register from "../pages/Register";
 
 export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/unauthorized" element={<Unauthorized />} />

@@ -117,6 +117,15 @@ export default function Login() {
         >
           {loading ? "Processing..." : step === 1 ? "Login" : "Confirm"}
         </button>
+        <p className="text-center text-sm text-gray-500 mt-2">
+          Don’t have an account?{" "}
+          <a
+            href="/register"
+            className="text-black font-semibold hover:underline"
+          >
+            Sign up
+          </a>
+        </p>
 
         {step === 2 && (
           <button

@@ -444,6 +444,7 @@ export type AuthContextType = {
   user: User | null;
   loading: boolean;
   loginUser: (data: LoginDTO) => Promise<void>;
+  registerUser: (data: RegisterDTO) => Promise<void>;
   logoutUser: () => Promise<void>;
 };
 

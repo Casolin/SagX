@@ -8,8 +8,10 @@ type QueueItem = {
   reject: (error: unknown) => void;
 };
 
+const isElectron = navigator.userAgent.toLowerCase().includes("electron");
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: isElectron ? "https://sagx-server.onrender.com" : "",
   withCredentials: true,
 });
 

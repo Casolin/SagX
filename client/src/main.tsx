@@ -11,12 +11,6 @@ import { Buffer } from "buffer";
 window.global = window;
 window.Buffer = Buffer;
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.getRegistrations().then((regs) => {
-    regs.forEach((r) => r.unregister());
-  });
-}
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>

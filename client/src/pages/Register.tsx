@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { AxiosError } from "axios";
+import { register } from "../api/auth.api";
 
 export default function Register() {
-  const { registerUser } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -33,7 +32,7 @@ export default function Register() {
     try {
       setLoading(true);
 
-      await registerUser({
+      await register({
         firstName: form.firstName,
         lastName: form.lastName,
         email: form.email,

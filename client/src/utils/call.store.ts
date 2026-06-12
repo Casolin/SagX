@@ -282,25 +282,10 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     if (!peer || !stream) return;
 
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile && !navigator.mediaDevices?.getDisplayMedia) {
-      alert("Screen sharing is not supported on this mobile browser");
-      return;
-    }
-
-    //eslint-disable-next-line
+    // eslint-disable-next-line
     const pc = (peer as any)._pc as RTCPeerConnection;
 
-    const senders = pc.getSenders();
-
-    const videoSender = senders.find(
-      (s) => s.track && s.track.kind === "video",
-    );
-
-    const audioSender = senders.find(
-      (s) => s.track && s.track.kind === "audio",
-    );
+    const videoSender = pc.getSenders().find((s) => s.track?.kind === "video");
 
     if (!videoSender) return;
 
@@ -316,37 +301,31 @@ export const useCallStore = create<CallState>((set, get) => ({
       return;
     }
 
-    // GET SCREEN STREAM (Electron or Browser)
-    let screenStream: MediaStream;
-
-    //eslint-disable-next-line
-    const electronAPI = (window as any).electronAPI;
-
     try {
+      let screenStream;
+
+      //eslint-disable-next-line
+      const electronAPI = (window as any).electronAPI;
+
       if (electronAPI?.getScreenStream) {
         screenStream = await electronAPI.getScreenStream();
       } else {
         screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: true,
-          audio: true,
+          audio: false,
         });
       }
 
-      const screenTrack = screenStream.getVideoTracks()[0];
+      const [screenTrack] = screenStream.getVideoTracks();
 
       if (!screenTrack) return;
 
+      // IMPORTANT FIX: force track to be enabled + active
+      screenTrack.enabled = true;
+
       await videoSender.replaceTrack(screenTrack);
 
-      // optional audio merge (keep your logic, but safe guard)
-      if (audioSender) {
-        const micTrack = stream.getAudioTracks()[0];
-
-        if (micTrack) {
-          await audioSender.replaceTrack(micTrack);
-        }
-      }
-
+      // IMPORTANT: handle stop properly
       screenTrack.onended = async () => {
         const fallback = stream.getVideoTracks()[0];
 

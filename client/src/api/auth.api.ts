@@ -1,5 +1,5 @@
 import api from "./axios";
-import type { LoginDTO } from "../types/global.types";
+import type { LoginDTO, RegisterDTO } from "../types/global.types";
 
 export type ForgotPasswordDto = {
   email: string;
@@ -12,6 +12,18 @@ export type ResetPasswordDto = {
 
 export const login = async (data: LoginDTO) => {
   const res = await api.post("/api/auth/login", data);
+
+  const accessToken = res.data?.data?.accessToken || res.data?.accessToken;
+
+  if (accessToken) {
+    localStorage.setItem("accessToken", accessToken);
+  }
+
+  return res.data.data ?? res.data;
+};
+
+export const register = async (data: RegisterDTO) => {
+  const res = await api.post("/api/auth/register", data);
 
   const accessToken = res.data?.data?.accessToken || res.data?.accessToken;
 

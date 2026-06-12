@@ -5,25 +5,25 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "./",
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-
+      injectRegister: "auto",
+      devOptions: {
+        enabled: false,
+      },
       manifest: {
         id: "/",
-
         name: "SagX",
         short_name: "SagX",
         description: "Your Favorite Management Tool",
-
         start_url: "/dashboard",
         display: "standalone",
-
         background_color: "#000000",
         theme_color: "#000000",
-
         icons: [
           {
             src: "/icons/icon-192.webp",

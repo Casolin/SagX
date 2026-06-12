@@ -8,11 +8,10 @@ import {
   resetPasswordController,
 } from "./auth.controller.js";
 import { authMiddleware } from "../../middlewares/auth.middleware.js";
-import { authorizeRole } from "../../middlewares/role.middleware.js";
 
 const router = Router();
 
-router.post("/register", authMiddleware, authorizeRole(["ADMIN"]), register);
+router.post("/register", register);
 
 router.post("/login", login);
 

@@ -15,7 +15,7 @@ export default function DownloadApp() {
     <div className="fixed inset-0 w-screen h-screen bg-linear-to-b from-gray-950 via-gray-900 to-black text-white flex items-center justify-center px-6 z-100">
       <button
         onClick={() => navigate("/dashboard")}
-        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/10 backdrop-blur hover:bg-white/20 transition active:scale-95"
+        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/10 backdrop-blur hover:bg-white/20 transition active:scale-95 cursor-pointer"
       >
         ← Back
       </button>

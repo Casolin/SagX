@@ -282,23 +282,34 @@ export const useCallStore = create<CallState>((set, get) => ({
 
     if (!peer || !stream) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobile && !navigator.mediaDevices?.getDisplayMedia) {
+      alert("Screen sharing is not supported on this mobile browser");
+      return;
+    }
+
+    // eslint-disable-next-line
     const pc = (peer as any)._pc as RTCPeerConnection;
 
-    const videoSender = pc
-      .getSenders()
-      .find((s: RTCRtpSender) => s.track?.kind === "video");
+    const senders = pc.getSenders();
+
+    const videoSender = senders.find(
+      (s) => s.track && s.track.kind === "video",
+    );
+
+    const audioSender = senders.find(
+      (s) => s.track && s.track.kind === "audio",
+    );
 
     if (!videoSender) return;
 
-    const fallbackTrack = stream.getVideoTracks()[0];
+    const dummyTrack = stream.getVideoTracks()[0];
 
-    // =========================
     // STOP SCREEN SHARE
-    // =========================
     if (isScreenSharing) {
-      if (fallbackTrack) {
-        await videoSender.replaceTrack(fallbackTrack);
+      if (dummyTrack) {
+        await videoSender.replaceTrack(dummyTrack);
       }
 
       set({ isScreenSharing: false });
@@ -306,49 +317,45 @@ export const useCallStore = create<CallState>((set, get) => ({
     }
 
     try {
-      // =========================
-      // 1. GET SOURCES (Discord-style)
-      // =========================
-      const sources = await window.electronAPI?.getScreenSources?.();
+      let screenStream: MediaStream;
 
-      console.log("SCREEN SOURCES:", sources);
+      // =========================
+      // ELECTRON FIX (ONLY CHANGE)
+      // =========================
+      // eslint-disable-next-line
+      const electronAPI = (window as any).electronAPI;
 
-      if (!sources || sources.length === 0) {
-        throw new Error("No screen sources available");
+      if (electronAPI?.createScreenStream) {
+        const sources = await electronAPI.getScreenSources();
+
+        if (!sources || !sources.length) {
+          throw new Error("No screen sources found");
+        }
+
+        const selected = sources[0];
+
+        screenStream = await electronAPI.createScreenStream(selected.id);
+      } else {
+        screenStream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: true,
+        });
       }
 
-      const selected = sources[0];
+      const screenTrack = screenStream.getVideoTracks()[0];
 
-      // =========================
-      // 2. CREATE SCREEN STREAM
-      // =========================
-      const screenStream = await window.electronAPI?.createScreenStream?.(
-        selected.id,
-      );
+      if (!screenTrack) return;
 
-      console.log("SCREEN STREAM:", screenStream);
-
-      if (
-        !screenStream ||
-        typeof (screenStream as MediaStream).getVideoTracks !== "function"
-      ) {
-        throw new Error("Invalid MediaStream returned");
-      }
-
-      const screenTrack = (screenStream as MediaStream).getVideoTracks()[0];
-
-      if (!screenTrack) {
-        throw new Error("No video track found");
-      }
-
-      // =========================
-      // 3. REPLACE TRACK
-      // =========================
       await videoSender.replaceTrack(screenTrack);
 
-      // =========================
-      // 4. AUTO RESTORE
-      // =========================
+      if (audioSender) {
+        const micTrack = stream.getAudioTracks()[0];
+
+        if (micTrack) {
+          await audioSender.replaceTrack(micTrack);
+        }
+      }
+
       screenTrack.onended = async () => {
         const fallback = stream.getVideoTracks()[0];
 
@@ -361,10 +368,7 @@ export const useCallStore = create<CallState>((set, get) => ({
 
       set({ isScreenSharing: true });
     } catch (err) {
-      console.error("SCREEN SHARE ERROR:", err);
-
-      // ❌ NO ALERTS for PWA/web users
-      // only silent fail or console log
+      console.log("SCREEN SHARE ERROR:", err);
     }
   },
 

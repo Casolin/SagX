@@ -78,7 +78,7 @@ export default function Register() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-10">
         <div className="w-full bg-white rounded-3xl p-8 md:p-12">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <img src="/logo.png" className="w-24 mx-auto" alt="Logo" />
+            <img src="/logo.png" className="w-16 md:w-23 mx-auto" alt="Logo" />
 
             <div className="text-center">
               <h2 className="text-4xl font-bold text-gray-900">

@@ -23,24 +23,8 @@ export const login = async (data: LoginDTO) => {
 };
 
 export const register = async (data: RegisterDTO) => {
-  const res = await api.post("/api/auth/register", data, {
-    transformRequest: [
-      (data, headers) => {
-        if (headers) {
-          delete headers.Authorization;
-        }
-        return JSON.stringify(data);
-      },
-    ],
-  });
-
-  const accessToken = res.data?.data?.accessToken || res.data?.accessToken;
-
-  if (accessToken) {
-    localStorage.setItem("accessToken", accessToken);
-  }
-
-  return res.data.data ?? res.data;
+  const res = await api.post("/api/auth/register", data);
+  return res.data;
 };
 
 export const logout = async () => {

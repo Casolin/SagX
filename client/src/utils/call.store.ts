@@ -289,7 +289,7 @@ export const useCallStore = create<CallState>((set, get) => ({
       return;
     }
 
-    // eslint-disable-next-line
+    //eslint-disable-next-line
     const pc = (peer as any)._pc as RTCPeerConnection;
 
     const senders = pc.getSenders();
@@ -316,25 +316,15 @@ export const useCallStore = create<CallState>((set, get) => ({
       return;
     }
 
+    // GET SCREEN STREAM (Electron or Browser)
+    let screenStream: MediaStream;
+
+    //eslint-disable-next-line
+    const electronAPI = (window as any).electronAPI;
+
     try {
-      let screenStream: MediaStream;
-
-      // =========================
-      // ELECTRON FIX (ONLY CHANGE)
-      // =========================
-      // eslint-disable-next-line
-      const electronAPI = (window as any).electronAPI;
-
-      if (electronAPI?.createScreenStream) {
-        const sources = await electronAPI.getScreenSources();
-
-        if (!sources || !sources.length) {
-          throw new Error("No screen sources found");
-        }
-
-        const selected = sources[0];
-
-        screenStream = await electronAPI.createScreenStream(selected.id);
+      if (electronAPI?.getScreenStream) {
+        screenStream = await electronAPI.getScreenStream();
       } else {
         screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: true,
@@ -348,6 +338,7 @@ export const useCallStore = create<CallState>((set, get) => ({
 
       await videoSender.replaceTrack(screenTrack);
 
+      // optional audio merge (keep your logic, but safe guard)
       if (audioSender) {
         const micTrack = stream.getAudioTracks()[0];
 

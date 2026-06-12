@@ -5,7 +5,7 @@ export default function DownloadApp() {
   const navigate = useNavigate();
 
   const desktopUrl =
-    "https://github.com/Casolin/Sagx/releases/download/v1.0.0/sagx-setup.exe";
+    "https://github.com/Casolin/Sagx/releases/download/SagX/SAGX.Setup.1.0.0.exe";
 
   const handleDesktopDownload = () => {
     window.open(desktopUrl, "_blank", "noopener,noreferrer");

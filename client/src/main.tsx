@@ -7,7 +7,7 @@ import { AuthContextProvider } from "./context/AuthContext.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Buffer } from "buffer";
-import { ThemeProvider } from "./context/ThemeContext.tsx";
+import { ThemeProvider } from "./context/ThemeProvider.tsx";
 
 window.global = window;
 window.Buffer = Buffer;

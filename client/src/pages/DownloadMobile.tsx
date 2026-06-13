@@ -29,7 +29,7 @@ export default function DownloadMobile() {
   };
 
   return (
-    <div className="fixed inset-0 w-screen h-screen flex items-center justify-center bg-linear-to-b from-gray-950 via-gray-900 to-black text-white z-100">
+    <div className="fixed inset-0 w-screen h-screen flex items-center justify-center bg-zinc-950 text-white z-100">
       {/* BACK BUTTON */}
       <button
         onClick={() => navigate("/dashboard")}

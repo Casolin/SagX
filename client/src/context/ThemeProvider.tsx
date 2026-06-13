@@ -11,8 +11,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (dark) {
       enable({
         brightness: 100,
-        contrast: 90,
+        contrast: 95,
         sepia: 0,
+        grayscale: 0,
       });
       localStorage.setItem("theme", "dark");
     } else {

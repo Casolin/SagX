@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { menuByRole } from "../constants/menu";
-import { LogOut, Menu, ArrowLeftFromLine, Bell } from "lucide-react";
+import { LogOut, Menu, ArrowLeftFromLine, Bell, Moon, Sun } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import { useNotificationStore } from "../utils/notification.store";
 import { getNotifications } from "../api/notification.api";
 import { getSocket } from "../services/socket.service";
 import type { Message } from "../types/global.types";
+import { useTheme } from "../hooks/useTheme";
 
 type Props = {
   open: boolean;
@@ -31,6 +32,7 @@ export default function Sidebar({
   const notifications = useNotificationStore((s) => s.notifications);
   const setNotifications = useNotificationStore((s) => s.setNotifications);
   const openNotifications = useNotificationStore((s) => s.openPanel);
+  const { dark, toggle } = useTheme();
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
@@ -229,6 +231,12 @@ export default function Sidebar({
               </NavLink>
             );
           })}
+          <button
+            onClick={toggle}
+            className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+          >
+            {dark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
         </div>
 
         {/* FOOTER */}

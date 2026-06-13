@@ -365,7 +365,7 @@ export default function Profile({ dark }: { dark?: boolean }) {
               ${
                 dark
                   ? "bg-black/30 border-white/10 placeholder:text-gray-500 focus:border-indigo-500"
-                  : "bg-gray-50 border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
+                  : "bg-[#f6f7fb] border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
               }`}
             />
 
@@ -378,7 +378,7 @@ export default function Profile({ dark }: { dark?: boolean }) {
               ${
                 dark
                   ? "bg-black/30 border-white/10 placeholder:text-gray-500 focus:border-indigo-500"
-                  : "bg-gray-50 border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
+                  : "bg-[#f6f7fb] border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
               }`}
             />
 
@@ -391,7 +391,7 @@ export default function Profile({ dark }: { dark?: boolean }) {
               ${
                 dark
                   ? "bg-black/30 border-white/10 placeholder:text-gray-500 focus:border-indigo-500"
-                  : "bg-gray-50 border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
+                  : "bg-[#f6f7fb] border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
               }`}
             />
 
@@ -405,7 +405,7 @@ export default function Profile({ dark }: { dark?: boolean }) {
               ${
                 dark
                   ? "bg-black/30 border-white/10 placeholder:text-gray-500 focus:border-indigo-500"
-                  : "bg-gray-50 border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
+                  : "bg-[#f6f7fb] border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
               }`}
             />
 
@@ -419,7 +419,7 @@ export default function Profile({ dark }: { dark?: boolean }) {
               ${
                 dark
                   ? "bg-black/30 border-white/10 placeholder:text-gray-500 focus:border-indigo-500"
-                  : "bg-gray-50 border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
+                  : "bg-[#f6f7fb] border-gray-200 placeholder:text-gray-400 focus:border-indigo-500"
               }`}
             />
           </div>

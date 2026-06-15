@@ -105,7 +105,7 @@ const ChatNavbar = ({ selectedUser = null, roomId }: Props) => {
         {isRoom && (
           <div>
             <p className="font-semibold">{room?.name}</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-600">
               {room?.members?.length ?? 0} members
             </p>
           </div>

@@ -116,19 +116,19 @@ export default function MissionCard({ mission, refresh }: Props) {
 
         {/* INFO GRID */}
         <div className="grid grid-cols-3 gap-4 text-sm">
-          <div className="rounded-xl p-3 bg-white/10">
+          <div className="rounded-xl p-3 bg-gray-200">
             <p className="text-xs text-gray-400">Priority</p>
             <p className="font-semibold text-gray-800">{mission.priority}</p>
           </div>
 
-          <div className="rounded-xl  p-3 bg-white/10">
+          <div className="rounded-xl  p-3 bg-gray-200">
             <p className="text-xs text-gray-400">Tasks</p>
             <p className="font-semibold text-gray-800">
               {mission.tasks?.length || 0}
             </p>
           </div>
 
-          <div className="rounded-xl bg-white/10 p-3 col-span-1">
+          <div className="rounded-xl bg-gray-200 p-3 col-span-1">
             <p className="text-xs text-gray-400">Skills</p>
             <p className="font-semibold text-gray-800 truncate">
               {mission.requiredSkills?.join(", ") || "-"}

@@ -80,52 +80,51 @@ export default function MachineCard({ machine, refresh }: Props) {
     <>
       <div
         onClick={() => navigate(`/machines/${machine._id}/edit`)}
-        className={`
-          group relative flex flex-col gap-2 rounded-2xl border p-3
-          transition cursor-pointer shadow-sm hover:shadow-md
-          ${cfg.bg} ${cfg.border} ${cfg.glow}
-        `}
+        className="
+        group relative flex flex-col gap-3 p-4 rounded-xl
+        border border-gray-200 dark:border-white/10
+        bg-white shadow-sm  
+        hover:shadow-lg hover:scale-[1.01]
+        transition cursor-pointer
+      "
       >
-        {/* TOP HEADER */}
-        <div className="flex items-start justify-between">
+        {/* HEADER */}
+        <div className="flex items-start justify-between gap-3">
           {/* LEFT */}
-          <div className="flex items-center gap-2 min-w-0">
-            <div
-              className={`
-              w-9 h-9 rounded-lg flex items-center justify-center
-              ${
-                state === "DOWN"
-                  ? "bg-red-100"
-                  : state === "MAINTENANCE"
-                  ? "bg-yellow-100"
-                  : "bg-gray-100"
-              }
-            `}
-            >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gray-100 shadow-sm">
               <Icon
                 size={18}
-                className={`${cfg.text} ${
-                  state === "DOWN" ? "animate-pulse" : ""
-                }`}
+                className={
+                  state === "DOWN"
+                    ? "text-red-500"
+                    : state === "MAINTENANCE"
+                    ? "text-yellow-500"
+                    : "text-green-500"
+                }
               />
             </div>
 
             <div className="min-w-0">
-              <h2 className="text-sm font-semibold text-gray-900 truncate">
-                {machine.name}
-              </h2>
+              <h2 className="text-sm font-semibold truncate">{machine.name}</h2>
 
-              <p className="text-[11px] text-gray-500 truncate">
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                 {machine.type || "Unknown machine"}
               </p>
             </div>
           </div>
 
-          {/* STATE BADGE */}
+          {/* STATUS BADGE */}
           <div
             className={`
-            flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-full
-            ${cfg.text} bg-white/70 border
+            flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium border
+            ${
+              state === "DOWN"
+                ? "text-red-600 border-red-200 dark:border-red-500/20 bg-red-50/40 dark:bg-red-500/10"
+                : state === "MAINTENANCE"
+                ? "text-yellow-600 border-yellow-200 dark:border-yellow-500/20 bg-yellow-50/40 dark:bg-yellow-500/10"
+                : "text-green-600 border-green-200 dark:border-green-500/20 bg-green-50/40 dark:bg-green-500/10"
+            }
           `}
           >
             <Icon size={12} />
@@ -134,14 +133,14 @@ export default function MachineCard({ machine, refresh }: Props) {
         </div>
 
         {/* META */}
-        <div className="flex flex-wrap gap-2 text-[11px] text-gray-600">
+        <div className="flex flex-wrap gap-3 text-[11px] text-gray-500 dark:text-gray-400">
           <span>📍 {machine.location || "No location"}</span>
           {machine.failureType && <span>⚠ {machine.failureType}</span>}
         </div>
 
         {/* DESCRIPTION */}
         {machine.description && (
-          <p className="text-[11px] text-gray-600 line-clamp-2">
+          <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
             {machine.description}
           </p>
         )}
@@ -154,7 +153,7 @@ export default function MachineCard({ machine, refresh }: Props) {
                 e.stopPropagation();
                 setOpenEdit(true);
               }}
-              className="p-1.5 rounded-md hover:bg-white/70"
+              className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-white/10"
             >
               <SlidersHorizontal size={15} />
             </button>
@@ -164,7 +163,7 @@ export default function MachineCard({ machine, refresh }: Props) {
                 e.stopPropagation();
                 setOpenDelete(true);
               }}
-              className="p-1.5 rounded-md hover:bg-white/70 text-red-600"
+              className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500"
             >
               <Trash2 size={15} />
             </button>

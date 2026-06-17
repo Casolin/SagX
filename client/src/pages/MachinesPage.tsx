@@ -5,11 +5,14 @@ import MachineList from "../components/machines/MachineList";
 import { searchBus } from "../utils/searchBus";
 import { SOCKET_EVENTS } from "../services/socket.events";
 import { getSocket } from "../services/socket.service";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function MachinesPage() {
   const [machines, setMachines] = useState<Machine[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchMachines = async () => {
     try {
@@ -67,7 +70,21 @@ export default function MachinesPage() {
 
   return (
     <div className="p-6 space-y-6 bg-[#f9f9f9] min-h-screen">
-      <h1 className="text-4xl font-black tracking-tight">Machines</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-black tracking-tight">Machines</h1>
+
+        <button
+          onClick={() => navigate("/machines/add")}
+          className="
+          flex items-center gap-2 px-4 py-2 rounded-xl
+          bg-black text-white
+          hover:scale-[1.03] transition shadow-sm
+        "
+        >
+          <Plus size={18} />
+          <span className="text-sm font-semibold">Machine</span>
+        </button>
+      </div>
 
       {loading ? (
         <div className="text-gray-500">Loading...</div>

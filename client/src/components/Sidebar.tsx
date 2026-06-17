@@ -58,7 +58,11 @@ export default function Sidebar({
         >
           {!collapsed ? (
             <div className="flex items-center gap-2">
-              <img src="/logo.png" className="w-10 h-10" />
+              <img
+                src={dark ? "/logo2.png" : "/logo.png"}
+                className="w-10 h-10"
+                alt="logo"
+              />
               <h2 className="font-montserrat text-2xl">SAGX</h2>
             </div>
           ) : (

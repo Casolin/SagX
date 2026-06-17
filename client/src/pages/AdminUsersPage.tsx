@@ -5,6 +5,7 @@ import { getUsers, deleteUser } from "../api/admin.api";
 import type { User } from "../types/global.types";
 
 import UserList from "../components/users/UserList";
+import { Plus } from "lucide-react";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -47,7 +48,22 @@ export default function AdminUsersPage() {
 
   return (
     <div className="p-6 space-y-6 bg-[#f9f9f9] min-h-screen">
-      <h1 className="text-4xl font-black tracking-tight">Users</h1>
+      {/* HEADER */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-black tracking-tight">Users</h1>
+
+        <button
+          onClick={() => navigate("/users/add")}
+          className="
+            flex items-center gap-2 px-4 py-2 rounded-xl
+            bg-black text-white
+            hover:scale-[1.03] transition shadow-sm
+          "
+        >
+          <Plus size={18} />
+          <span className="text-sm font-semibold">Users</span>
+        </button>
+      </div>
 
       {loading ? (
         <p className="text-gray-500">Loading users...</p>

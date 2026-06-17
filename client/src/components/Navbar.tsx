@@ -33,6 +33,7 @@ export default function Navbar({ setIsOpen, open }: Props) {
   const notifications = useNotificationStore((s) => s.notifications);
   const setNotifications = useNotificationStore((s) => s.setNotifications);
   const openNotifications = useNotificationStore((s) => s.openPanel);
+  const firstName = user?.firstName || "User";
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
@@ -123,7 +124,7 @@ export default function Navbar({ setIsOpen, open }: Props) {
   };
 
   return (
-    <div className="sticky top-0 z-60">
+    <div className="sticky top-0 z-30">
       {/* TOP BAR */}
       <div className="h-16 flex items-center justify-between px-3 md:px-6 bg-white backdrop-blur-xl border-b border-slate-200/40 dark:border-white/10">
         {/* LEFT */}
@@ -169,6 +170,21 @@ export default function Navbar({ setIsOpen, open }: Props) {
               <MessageSquare size={18} />
             </button>
           )}
+
+          <div className="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-full bg-slate-100/80 dark:bg-white/10 border border-slate-200/60 dark:border-white/10">
+            <img
+              src={user?.avatar}
+              alt="avatar"
+              className="w-9 h-9 rounded-full object-cover border border-white/40 dark:border-white/10 shadow-sm"
+            />
+
+            <div className="flex flex-col leading-tight">
+              <span className="text-sm font-semibold">{firstName}</span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                {user?.email}
+              </span>
+            </div>
+          </div>
 
           {/* NOTIFICATIONS */}
           <button

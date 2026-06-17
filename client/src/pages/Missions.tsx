@@ -5,11 +5,14 @@ import MissionList from "../components/missions/MissionList";
 import { searchBus } from "../utils/searchBus";
 import { getSocket } from "../services/socket.service";
 import { SOCKET_EVENTS } from "../services/socket.events";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Missions() {
   const [missions, setMissions] = useState<Mission[]>([]);
   const [allMissions, setAllMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchMissions = async () => {
     try {
@@ -80,7 +83,21 @@ export default function Missions() {
 
   return (
     <div className="p-6 space-y-6 bg-[#f9f9f9] min-h-screen">
-      <h1 className="text-4xl font-black tracking-tight">Missions</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-black tracking-tight">Missions</h1>
+
+        <button
+          onClick={() => navigate("/missions/add")}
+          className="
+          flex items-center gap-2 px-4 py-2 rounded-xl
+          bg-black text-white
+          hover:scale-[1.03] transition shadow-sm
+        "
+        >
+          <Plus size={18} />
+          <span className="text-sm font-semibold">Mission</span>
+        </button>
+      </div>
 
       {loading ? (
         <div>Loading...</div>

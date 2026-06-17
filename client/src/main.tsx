@@ -7,7 +7,6 @@ import { AuthContextProvider } from "./context/AuthContext.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Buffer } from "buffer";
-import { ThemeProvider } from "./context/ThemeProvider.tsx";
 
 window.global = window;
 window.Buffer = Buffer;
@@ -15,22 +14,20 @@ window.Buffer = Buffer;
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
-        <AuthContextProvider>
-          <App />
-          <ToastContainer
-            position="bottom-center"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            pauseOnHover={false}
-            draggable
-          />
-        </AuthContextProvider>
-      </ThemeProvider>
+      <AuthContextProvider>
+        <App />
+        <ToastContainer
+          position="bottom-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          pauseOnHover={false}
+          draggable
+        />
+      </AuthContextProvider>
     </BrowserRouter>
   </StrictMode>,
 );

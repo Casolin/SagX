@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import Mission from "./mission.model.js";
 import User from "../users/user.model.js";
-import { broadcastKpiUpdate } from "../../utils/kpi.helper.js";
+import { broadcastKpiUpdate } from "../kpi/kpi.helper.js";
 
 import {
   createMission,
@@ -11,7 +11,7 @@ import {
   deleteMission,
 } from "./mission.service.js";
 
-import { broadcastMachineUpdated } from "../../utils/machine.helper.js";
+import { broadcastMachineUpdated } from "../machines/machine.helper.js";
 
 import { emitToUser } from "../../sockets/socket.service.js";
 import { SOCKET_EVENTS } from "../../sockets/socket.events.js";
@@ -20,7 +20,7 @@ import { consumeMaterials } from "../materials/material.service.js";
 import Alert from "../alert/alert.model.js";
 
 import { createNotification } from "../notification/notification.service.js";
-import { missionEvents } from "../../utils/mission.helper.js";
+import { missionEvents } from "./mission.helper.js";
 
 /* ---------------- SAFE PARAM ---------------- */
 const getParam = (param: unknown): string => {

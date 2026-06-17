@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { menuByRole } from "../constants/menu";
-import { LogOut, Menu, ArrowLeftFromLine, Bell, Moon, Sun } from "lucide-react";
+import { LogOut, Menu, ArrowLeftFromLine, Bell } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -9,7 +9,6 @@ import { useNotificationStore } from "../utils/notification.store";
 import { getNotifications } from "../api/notification.api";
 import { getSocket } from "../services/socket.service";
 import type { Message } from "../types/global.types";
-import { useTheme } from "../hooks/useTheme";
 
 type Props = {
   open: boolean;
@@ -32,7 +31,6 @@ export default function Sidebar({
   const notifications = useNotificationStore((s) => s.notifications);
   const setNotifications = useNotificationStore((s) => s.setNotifications);
   const openNotifications = useNotificationStore((s) => s.openPanel);
-  const { dark, toggle } = useTheme();
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
@@ -234,32 +232,6 @@ export default function Sidebar({
         </div>
 
         <div className="border-t border-gray-100 p-3">
-          <button
-            onClick={toggle}
-            className={`
-        relative flex items-center
-        w-14 h-7 rounded-full
-        transition-colors duration-300 mb-2
-        ${dark ? "bg-indigo-600" : "bg-gray-300"}
-      `}
-          >
-            <div
-              className={`
-          absolute top-1 left-1
-          w-5 h-5 rounded-full
-          bg-white shadow-md
-          flex items-center justify-center
-          transition-all duration-300
-          ${dark ? "translate-x-7" : "translate-x-0"}
-        `}
-            >
-              {dark ? (
-                <Moon size={12} className="text-indigo-600" />
-              ) : (
-                <Sun size={12} className="text-yellow-500" />
-              )}
-            </div>
-          </button>
           {user && (
             <div className="flex items-center gap-3">
               {!collapsed && (

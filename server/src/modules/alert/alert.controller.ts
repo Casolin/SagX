@@ -9,12 +9,12 @@ import {
   deleteAlert,
 } from "./alert.service.js";
 
-import { broadcastKpiUpdate } from "../../utils/kpi.helper.js";
+import { broadcastKpiUpdate } from "../kpi/kpi.helper.js";
 import {
   broadcastAlertCreated,
   broadcastAlertUpdated,
   broadcastAlertDeleted,
-} from "../../utils/alert.helper.js";
+} from "./alert.helper.js";
 
 const getParam = (param: unknown): string => {
   if (typeof param === "string") return param;

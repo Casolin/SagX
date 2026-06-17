@@ -1,7 +1,7 @@
 import User from "../users/user.model.js";
 import { hashPassword, comparePassword } from "../../utils/hash.js";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.js";
-import { UserRole } from "../users/user.types.js";
+import type { UserRole } from "../users/user.types.js";
 import { AppError } from "../../utils/AppError.js";
 import { verifyTwoFactorToken } from "../../services/twoFactor.service.js";
 import crypto from "crypto";
@@ -19,7 +19,7 @@ export const registerUser = async (data: any) => {
   const user = await User.create({
     ...data,
     password: hashedPassword,
-    role: data.role || UserRole.TECHNICIAN,
+    role: data.role || "TECHNICIAN",
   });
 
   return user;

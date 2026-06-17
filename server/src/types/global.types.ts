@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { UserRole } from "../modules/users/user.types.js";
+import type { UserRole } from "../modules/users/user.types.js";
 
 export interface JwtPayload {
   id: string;

@@ -1,7 +1,7 @@
-import Mission from "../modules/missions/mission.model.js";
-import User from "../modules/users/user.model.js";
-import { emitToUser } from "../sockets/socket.service.js";
-import { SOCKET_EVENTS } from "../sockets/socket.events.js";
+import Mission from "./mission.model.js";
+import User from "../users/user.model.js";
+import { emitToUser } from "../../sockets/socket.service.js";
+import { SOCKET_EVENTS } from "../../sockets/socket.events.js";
 
 const getPopulatedMission = async (id: string) => {
   return await Mission.findById(id)

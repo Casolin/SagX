@@ -1,7 +1,7 @@
-import User from "../modules/users/user.model.js";
-import { getKpiStats, getTechnicianKpis } from "../modules/kpi/kpi.service.js";
-import { emitToUser } from "../sockets/socket.service.js";
-import { SOCKET_EVENTS } from "../sockets/socket.events.js";
+import User from "../users/user.model.js";
+import { getKpiStats, getTechnicianKpis } from "./kpi.service.js";
+import { emitToUser } from "../../sockets/socket.service.js";
+import { SOCKET_EVENTS } from "../../sockets/socket.events.js";
 
 export const broadcastKpiUpdate = async () => {
   const users = await User.find({}).select("_id role");

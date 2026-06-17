@@ -1,7 +1,7 @@
-import User from "../modules/users/user.model.js";
-import Alert from "../modules/alert/alert.model.js";
-import { emitToUser } from "../sockets/socket.service.js";
-import { SOCKET_EVENTS } from "../sockets/socket.events.js";
+import User from "../users/user.model.js";
+import Alert from "../alert/alert.model.js";
+import { emitToUser } from "../../sockets/socket.service.js";
+import { SOCKET_EVENTS } from "../../sockets/socket.events.js";
 
 const getPopulatedAlert = async (alertId: string) => {
   return await Alert.findById(alertId).populate("machine", "name").lean();

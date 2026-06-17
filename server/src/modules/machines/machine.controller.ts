@@ -7,12 +7,12 @@ import {
   deleteMachine,
 } from "./machine.service.js";
 
-import { broadcastKpiUpdate } from "../../utils/kpi.helper.js";
+import { broadcastKpiUpdate } from "../kpi/kpi.helper.js";
 import {
   broadcastMachineCreated,
   broadcastMachineUpdated,
   broadcastMachineDeleted,
-} from "../../utils/machine.helper.js";
+} from "./machine.helper.js";
 
 import Alert from "../alert/alert.model.js";
 

@@ -1,6 +1,6 @@
-import User from "../modules/users/user.model.js";
-import { emitToUser } from "../sockets/socket.service.js";
-import { SOCKET_EVENTS } from "../sockets/socket.events.js";
+import User from "../../modules/users/user.model.js";
+import { emitToUser } from "../../sockets/socket.service.js";
+import { SOCKET_EVENTS } from "../../sockets/socket.events.js";
 
 const emitToRoles = async (roles: string[], event: string, data: any) => {
   const users = await User.find({ role: { $in: roles } }).select("_id");

@@ -197,6 +197,7 @@ export const getTechnicianKpis = async (userId: string) => {
     OPEN: 0,
     IN_PROGRESS: 0,
     RESOLVED: 0,
+    CANCELLED: 0,
   };
 
   alerts.forEach((a) => {

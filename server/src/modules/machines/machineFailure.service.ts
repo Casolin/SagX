@@ -14,8 +14,22 @@ export const handleMachineFailure = async (machine: any, userId: string) => {
       requiredSkills: [failureType],
 
       tasks: [
-        { title: "Diagnose issue", status: "PENDING" },
-        { title: "Fix components", status: "PENDING" },
+        {
+          title: "Diagnose issue",
+          status: "PENDING",
+          source: "AUTO",
+          priority: "MEDIUM",
+          estimatedTime: 30,
+          progress: 0,
+        },
+        {
+          title: "Fix components",
+          status: "PENDING",
+          source: "AUTO",
+          priority: "MEDIUM",
+          estimatedTime: 60,
+          progress: 0,
+        },
       ],
     },
     userId,

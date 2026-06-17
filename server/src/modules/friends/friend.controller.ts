@@ -17,7 +17,7 @@ import {
   broadcastFriendAccept,
   broadcastFriendRemove,
   broadcastFriendReject,
-} from "../../utils/friend.helper.js";
+} from "./friend.helper.js";
 
 export const sendFriendRequest = async (req: Request, res: Response) => {
   try {

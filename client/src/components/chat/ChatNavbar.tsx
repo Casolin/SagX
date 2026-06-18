@@ -5,7 +5,7 @@ import { getMyRooms, deleteRoom, leaveRoom } from "../../api/room.api";
 import type { Room } from "../../types/global.types";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-toastify";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCallStore } from "../../utils/call.store";
 
 interface Props {
@@ -18,6 +18,7 @@ const LAST_ROUTE_KEY = "last_route_before_call";
 const ChatNavbar = ({ selectedUser = null, roomId }: Props) => {
   const { user } = useAuth();
   const [room, setRoom] = useState<Room | null>(null);
+  const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -70,6 +71,7 @@ const ChatNavbar = ({ selectedUser = null, roomId }: Props) => {
     try {
       await leaveRoom(room!._id);
       toast.success("Left room");
+      navigate("/chat");
     } catch {
       toast.error("Failed to leave room");
     }
@@ -79,6 +81,7 @@ const ChatNavbar = ({ selectedUser = null, roomId }: Props) => {
     try {
       await deleteRoom(room!._id);
       toast.success("Room deleted");
+      navigate("/chat");
     } catch {
       toast.error("Failed to delete room");
     }

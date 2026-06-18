@@ -522,7 +522,7 @@ export default function Dashboard({ dark }: { dark?: boolean }) {
       `}
       >
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-2/4">
+          <div className="flex-2">
             <h2 className="text-xl font-bold mb-5">Latest Activities</h2>
 
             {updates.length === 0 ? (
@@ -559,7 +559,7 @@ export default function Dashboard({ dark }: { dark?: boolean }) {
           </div>
           <div className="hidden md:block w-0.5 bg-gray-100 p-0.5 rounded-full" />
 
-          <div className="flex-3/4">
+          <div className="flex-3">
             <h2 className="text-xl font-bold mb-5">Latest Messages</h2>
 
             {messages.length === 0 ? (

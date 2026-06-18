@@ -1,0 +1,24 @@
+{
+  "mdb.presetConnections": [
+    {
+      "name": "Preset Connection",
+      "connectionString": "mongodb://localhost:27017"
+    }
+  ],
+  "cSpell.words": [
+    "activitylog",
+    "ailogo",
+    "capgo",
+    "darkreader",
+    "dotenv",
+    "linkify",
+    "mailersend",
+    "mlsender",
+    "regs",
+    "sagemcom",
+    "sagx",
+    "topg",
+    "TWOFA",
+    "webp"
+  ]
+}

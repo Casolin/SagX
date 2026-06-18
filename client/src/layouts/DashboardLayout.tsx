@@ -7,25 +7,28 @@ import NotificationPanel from "../components/NotificationPanel";
 export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [chatSidebarOpen, setChatSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100 text-gray-900 transition-colors">
-      {/* SIDEBAR */}
       <Sidebar
         open={open}
         setOpen={setOpen}
         collapsed={collapsed}
         setCollapsed={setCollapsed}
       />
+
       <NotificationPanel />
 
       <div className="flex flex-col flex-1 min-w-0">
-        <Navbar setIsOpen={setOpen} open={open} />
+        <Navbar
+          setIsOpen={setOpen}
+          open={open}
+          setChatSidebarOpen={setChatSidebarOpen}
+        />
 
         <main className="flex-1 overflow-y-auto">
-          <div className="min-h-full">
-            <Outlet />
-          </div>
+          <Outlet context={{ chatSidebarOpen, setChatSidebarOpen }} />
         </main>
       </div>
     </div>

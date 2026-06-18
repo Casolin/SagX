@@ -16,10 +16,11 @@ import { useTheme } from "../hooks/useTheme";
 
 type Props = {
   setIsOpen: (v: boolean) => void;
-  open: boolean; // main app sidebar
+  open: boolean;
+  setChatSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>; // main app sidebar
 };
 
-export default function Navbar({ setIsOpen, open }: Props) {
+export default function Navbar({ setIsOpen, open, setChatSidebarOpen }: Props) {
   const { pathname } = useLocation();
   const { user } = useAuth();
 
@@ -108,21 +109,6 @@ export default function Navbar({ setIsOpen, open }: Props) {
     };
   }, [user, location.pathname]);
 
-  const toggleChatSidebar = () => {
-    const sidebar = document.getElementById("chat-sidebar");
-    if (!sidebar) return;
-
-    const isOpen = sidebar.classList.contains("w-64");
-
-    if (isOpen) {
-      sidebar.classList.remove("w-64");
-      sidebar.classList.add("w-0");
-    } else {
-      sidebar.classList.remove("w-0");
-      sidebar.classList.add("w-64");
-    }
-  };
-
   return (
     <div className="sticky top-0 z-30">
       {/* TOP BAR */}
@@ -163,7 +149,7 @@ export default function Navbar({ setIsOpen, open }: Props) {
           {/* CHAT SIDEBAR BUTTON (NEW ADDITION) */}
           {currentPage === "Chat" && (
             <button
-              onClick={toggleChatSidebar}
+              onClick={() => setChatSidebarOpen?.((prev) => !prev)}
               className="md:hidden p-2 rounded-full bg-slate-100 dark:bg-white/10 hover:scale-105 transition"
               title="Toggle chat sidebar"
             >

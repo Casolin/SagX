@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 import ChatSidebar from "../components/chat/ChatSidebar";
@@ -16,19 +16,27 @@ import type {
   PopulatedUser,
 } from "../types/global.types";
 
+type LayoutContext = {
+  chatSidebarOpen: boolean;
+  setChatSidebarOpen: (v: boolean) => void;
+};
+
 const ChatPage = () => {
   const { userId, roomId } = useParams();
   const { user } = useAuth();
-
   const currentUserId = user?._id;
+
+  /** ✅ get sidebar state from DashboardLayout */
+  const { chatSidebarOpen, setChatSidebarOpen } =
+    useOutletContext<LayoutContext>();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // load messages
+  // =========================
+  // LOAD MESSAGES
+  // =========================
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -48,6 +56,9 @@ const ChatPage = () => {
     fetchMessages();
   }, [userId, roomId]);
 
+  // =========================
+  // SOCKET MESSAGES
+  // =========================
   useEffect(() => {
     const socket = getSocket();
     if (!socket) return;
@@ -112,6 +123,9 @@ const ChatPage = () => {
     };
   }, [userId, roomId]);
 
+  // =========================
+  // JOIN ROOM
+  // =========================
   useEffect(() => {
     const socket = getSocket();
     if (!socket || !roomId) return;
@@ -119,6 +133,9 @@ const ChatPage = () => {
     socket.emit("join_room", roomId);
   }, [roomId]);
 
+  // =========================
+  // LOAD SELECTED USER
+  // =========================
   useEffect(() => {
     if (!userId) return;
 
@@ -153,30 +170,38 @@ const ChatPage = () => {
     fetchUser();
   }, [userId, currentUserId]);
 
+  // =========================
+  // UI
+  // =========================
   return (
     <div className="h-[calc(100dvh-60px)] flex overflow-hidden bg-gray-100 relative">
-      {sidebarOpen && (
+      {/* overlay (mobile) */}
+      {chatSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/30 md:hidden z-40"
-          onClick={() => setSidebarOpen(false)}
+          onClick={() => setChatSidebarOpen(false)}
         />
       )}
 
+      {/* SIDEBAR */}
       <div
         className={`
           h-full w-[320px] bg-white border-r border-zinc-200
           flex flex-col overflow-y-auto transition-transform duration-300
           fixed md:relative top-0 left-0 z-50
           ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+            chatSidebarOpen
+              ? "translate-x-0"
+              : "-translate-x-full md:translate-x-0"
           }
         `}
       >
         <ChatSidebar
           setSelectedUser={(user) => {
             setSelectedUser(user);
-            setSidebarOpen(false);
+            setChatSidebarOpen(false);
           }}
+          closeSidebar={() => setChatSidebarOpen(false)}
         />
       </div>
 

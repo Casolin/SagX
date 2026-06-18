@@ -56,7 +56,7 @@ const MessageBubble = ({ message, own, setMessages }: Props) => {
             href={part}
             target="_blank"
             rel="noreferrer"
-            className="text-blue-500 underline break-all"
+            className="text-indigo-500/90 hover:text-indigo-400 underline decoration-indigo-400/40 underline-offset-2 break-all transition"
           >
             {part}
           </a>
@@ -225,8 +225,8 @@ const MessageBubble = ({ message, own, setMessages }: Props) => {
           message.isFile
             ? ""
             : own
-              ? "bg-indigo-600 text-white rounded-br-md"
-              : "bg-white border border-gray-200 text-gray-900 rounded-bl-md"
+            ? "bg-indigo-600 text-white rounded-br-md"
+            : "bg-white border border-gray-200 text-gray-900 rounded-bl-md"
         }`}
       >
         {renderContent()}

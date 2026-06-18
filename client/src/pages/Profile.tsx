@@ -236,159 +236,164 @@ export default function Profile({ dark }: { dark?: boolean }) {
      UI
   ========================= */
   return (
-    <div className="min-h-screen bg-[#09090b] text-white">
-      {/* Background Glow */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-indigo-600/20 blur-[180px]" />
-      </div>
+    <div
+      className={`h-screen overflow-hidden ${
+        dark ? "bg-[#0b0d14] text-white" : "bg-[#f6f7fb] text-gray-900"
+      }`}
+    >
+      <div className="h-full flex justify-center px-6 py-6">
+        <div className="w-full max-w-5xl flex flex-col gap-4">
+          {/* COVER */}
+          <div className="relative h-40 md:h-44 rounded-2xl overflow-hidden border border-gray-200">
+            <div className="absolute inset-0 bg-linear-to-r from-indigo-600/40 via-purple-500/30 to-blue-500/20" />
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_40%)]" />
+          </div>
 
-      <div className="relative max-w-7xl mx-auto p-8">
-        {/* HEADER */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold tracking-tight">
-            Profile Settings
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Manage your account, security and personal information.
-          </p>
-        </div>
+          {/* PROFILE HEADER */}
+          <div className="relative -mt-12 px-4">
+            <div className="rounded-2xl backdrop-blur-xl shadow-lg p-4 flex items-center justify-between bg-white border border-gray-200">
+              {/* LEFT */}
+              <div className="flex items-end gap-4">
+                {/* AVATAR */}
+                <div className="relative -mt-10">
+                  <div className="h-20 w-20 rounded-2xl overflow-hidden ring-4 ring-gray-200 shadow-md">
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center bg-linear-to-br from-indigo-500 to-purple-500 font-bold text-lg">
+                        {user.firstName?.charAt(0)}
+                      </div>
+                    )}
+                  </div>
 
-        {/* HERO CARD */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10" />
-
-          <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="relative">
-                <div className="h-28 w-28 rounded-full overflow-hidden ring-4 ring-indigo-500/20">
-                  {user.avatar ? (
-                    <img
-                      src={user.avatar}
-                      className="h-full w-full object-cover"
+                  <label className="absolute -bottom-2 -right-2 bg-black/60 backdrop-blur-md p-1.5 rounded-lg cursor-pointer">
+                    <Upload size={12} className="text-white" />
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={uploadAvatar}
                     />
-                  ) : (
-                    <div className="h-full w-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-3xl font-bold">
-                      {user.firstName?.charAt(0)}
-                    </div>
-                  )}
+                  </label>
                 </div>
 
-                <label className="absolute bottom-1 right-1 h-9 w-9 rounded-full bg-indigo-600 flex items-center justify-center cursor-pointer hover:bg-indigo-500 transition">
-                  <Upload size={16} />
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={uploadAvatar}
-                  />
-                </label>
-              </div>
+                {/* INFO */}
+                <div>
+                  <h2 className="text-lg font-semibold">
+                    {user.firstName} {user.lastName}
+                  </h2>
 
-              <div>
-                <h2 className="text-2xl font-bold">
-                  {user.firstName} {user.lastName}
-                </h2>
+                  <p className="text-xs text-gray-500">{user.email}</p>
 
-                <p className="text-gray-400 mt-1">{user.email}</p>
+                  <div className="flex gap-2 mt-2 flex-wrap">
+                    <span className="text-[11px] px-2 py-1 rounded-full bg-gray-200 text-indigo-600">
+                      {user.role}
+                    </span>
 
-                <div className="flex gap-2 mt-4">
-                  <span className="px-3 py-1 rounded-full text-xs bg-indigo-500/20 text-indigo-300">
-                    {user.role}
-                  </span>
-
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs ${
-                      user.twoFactorEnabled
-                        ? "bg-green-500/20 text-green-300"
-                        : "bg-red-500/20 text-red-300"
-                    }`}
-                  >
-                    {user.twoFactorEnabled ? "2FA Enabled" : "2FA Disabled"}
-                  </span>
+                    <span
+                      className={`text-[11px] px-2 py-1 rounded-full ${
+                        user.twoFactorEnabled
+                          ? "bg-green-500/10 text-green-600"
+                          : "bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      2FA {user.twoFactorEnabled ? "ON" : "OFF"}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* QUICK STATS */}
-            <div className="grid grid-cols-3 gap-4 w-full lg:w-auto">
-              <div className="bg-black/20 rounded-2xl p-4 min-w-[120px]">
-                <p className="text-xs text-gray-400">Status</p>
-                <p className="font-semibold mt-1">Active</p>
-              </div>
+              {/* ACTIONS */}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleEnable2FA}
+                  className="px-3 py-1.5 text-xs rounded-lg bg-indigo-600 text-white hover:bg-indigo-500"
+                >
+                  Enable
+                </button>
 
-              <div className="bg-black/20 rounded-2xl p-4 min-w-[120px]">
-                <p className="text-xs text-gray-400">Security</p>
-                <p className="font-semibold mt-1">
-                  {user.twoFactorEnabled ? "High" : "Medium"}
-                </p>
-              </div>
-
-              <div className="bg-black/20 rounded-2xl p-4 min-w-[120px]">
-                <p className="text-xs text-gray-400">Role</p>
-                <p className="font-semibold mt-1">{user.role}</p>
+                <button
+                  onClick={handleRemove2FA}
+                  className="px-3 py-1.5 text-xs rounded-lg bg-gray-100 hover:bg-gray-200"
+                >
+                  Disable
+                </button>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* CONTENT */}
-        <div className="grid lg:grid-cols-[1fr_350px] gap-8">
-          {/* ACCOUNT FORM */}
-          <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8">
-            <h3 className="text-xl font-semibold mb-6">Personal Information</h3>
+          {/* SETTINGS */}
+          <div className="rounded-2xl p-5 backdrop-blur-xl shadow-lg bg-white border border-gray-200">
+            <h3 className="text-sm font-semibold mb-3">Account Settings</h3>
 
-            <div className="grid md:grid-cols-2 gap-4">{/* inputs */}</div>
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                name="firstName"
+                value={form.firstName}
+                onChange={onChange}
+                placeholder="First name"
+                className="p-2.5 text-sm rounded-xl bg-white border border-gray-200 focus:border-indigo-500 outline-none"
+              />
+
+              <input
+                name="lastName"
+                value={form.lastName}
+                onChange={onChange}
+                placeholder="Last name"
+                className="p-2.5 text-sm rounded-xl bg-white border border-gray-200 focus:border-indigo-500 outline-none"
+              />
+
+              <input
+                name="email"
+                value={form.email}
+                onChange={onChange}
+                placeholder="Email"
+                className="col-span-2 p-2.5 text-sm rounded-xl bg-white border border-gray-200 focus:border-indigo-500 outline-none"
+              />
+
+              <input
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={onChange}
+                placeholder="Current password"
+                className="col-span-2 p-2.5 text-sm rounded-xl bg-white border border-gray-200 focus:border-indigo-500 outline-none"
+              />
+
+              <input
+                name="newPassword"
+                type="password"
+                value={form.newPassword}
+                onChange={onChange}
+                placeholder="New password"
+                className="col-span-2 p-2.5 text-sm rounded-xl bg-white border border-gray-200 focus:border-indigo-500 outline-none"
+              />
+            </div>
 
             <button
               onClick={save}
               disabled={saving}
-              className="mt-8 w-full h-12 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 font-semibold hover:scale-[1.01] transition"
+              className="mt-4 w-full py-2.5 text-sm rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold"
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
-
-          {/* SECURITY SIDEBAR */}
-          <div className="space-y-6">
-            <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6">
-              <h3 className="font-semibold mb-4">Two-Factor Authentication</h3>
-
-              <p className="text-sm text-gray-400 mb-5">
-                Protect your account with an extra security layer.
-              </p>
-
-              {user.twoFactorEnabled ? (
-                <button
-                  onClick={handleRemove2FA}
-                  className="w-full h-11 rounded-xl bg-red-500/20 text-red-300 hover:bg-red-500/30"
-                >
-                  Disable 2FA
-                </button>
-              ) : (
-                <button
-                  onClick={handleEnable2FA}
-                  className="w-full h-11 rounded-xl bg-green-500/20 text-green-300 hover:bg-green-500/30"
-                >
-                  Enable 2FA
-                </button>
-              )}
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6">
-              <h3 className="font-semibold mb-4">Password Security</h3>
-
-              <div className="space-y-3">
-                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full w-[80%] bg-green-500" />
-                </div>
-
-                <p className="text-sm text-gray-400">
-                  Strong password detected.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+
+      {/* CROPPER */}
+      {cropOpen && imageSrc && (
+        <AvatarCropModal
+          image={imageSrc}
+          onCancel={() => {
+            setCropOpen(false);
+            setImageSrc(null);
+          }}
+          onSave={handleCroppedSave}
+        />
+      )}
     </div>
   );
 }

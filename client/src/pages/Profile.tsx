@@ -245,7 +245,10 @@ export default function Profile({ dark }: { dark?: boolean }) {
         <div className="w-full max-w-5xl flex flex-col gap-4">
           {/* COVER */}
           <div className="relative h-40 md:h-44 rounded-2xl overflow-hidden border border-gray-200">
-            <div className="absolute inset-0 bg-linear-to-r from-indigo-600/40 via-purple-500/30 to-blue-500/20" />
+            <img
+              src="/userprofilecover.jpeg"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_40%)]" />
           </div>
 

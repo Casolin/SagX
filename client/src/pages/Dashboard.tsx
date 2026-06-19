@@ -478,35 +478,35 @@ export default function Dashboard({ dark }: { dark?: boolean }) {
       {user?.role === "TECHNICIAN" && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
           <KpiCard
-            dark={dark}
-            title="Total Missions"
-            value={data.missions?.total || 0}
+            title="My Missions"
+            value={data.myMissions?.total || 0}
             icon={Flag}
             color="#6366f1"
+            dark={dark}
           />
 
           <KpiCard
+            title="Active Missions"
+            value={data.myMissions?.active || 0}
+            icon={Power}
+            color="#3b82f6"
             dark={dark}
-            title="Completed"
-            value={data.missions?.COMPLETED || 0}
-            icon={Trophy}
-            color="#10b981"
           />
 
           <KpiCard
-            dark={dark}
-            title="Open Alerts"
-            value={data.alerts?.OPEN || 0}
+            title="Pending Tasks"
+            value={data.myTasks?.pending || 0}
             icon={AlertTriangle}
             color="#f59e0b"
+            dark={dark}
           />
 
           <KpiCard
+            title="Completed Tasks"
+            value={data.myTasks?.completed || 0}
+            icon={Trophy}
+            color="#10b981"
             dark={dark}
-            title="Machines Down"
-            value={data.machines?.status.DOWN || 0}
-            icon={Power}
-            color="#ef4444"
           />
         </div>
       )}

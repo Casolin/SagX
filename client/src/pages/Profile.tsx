@@ -52,6 +52,7 @@ export default function Profile({ dark }: { dark?: boolean }) {
   const [cropOpen, setCropOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [coverLoaded, setCoverLoaded] = useState(false);
 
   /* =========================
      LOAD PROFILE
@@ -243,13 +244,21 @@ export default function Profile({ dark }: { dark?: boolean }) {
     >
       <div className="h-full flex justify-center px-6 py-6">
         <div className="w-full max-w-5xl flex flex-col gap-4">
-          {/* COVER */}
           <div className="relative h-40 md:h-44 rounded-2xl overflow-hidden border border-gray-200">
             <img
               src="/userprofilecover.jpeg"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover object-top scale-110 blur-xl opacity-60"
             />
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_40%)]" />
+
+            <img
+              src="/userprofilecover.jpeg"
+              onLoad={() => setCoverLoaded(true)}
+              className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${
+                coverLoaded ? "opacity-100" : "opacity-0"
+              }`}
+            />
+
+            <div className="absolute inset-0 bg-black/10" />
           </div>
 
           {/* PROFILE HEADER */}

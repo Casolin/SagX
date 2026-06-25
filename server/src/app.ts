@@ -8,7 +8,7 @@ import materialRoutes from "./modules/materials/material.routes.js";
 import friendRoutes from "./modules/friends/friend.routes.js";
 import roomRoutes from "./modules/room/room.routes.js";
 import chatRoutes from "./modules/message/message.routes.js";
-import assistantRoutes from "./modules/ai/assistant/assistant.routes.js";
+import assistantRoutes from "./modules/assistant/assistant.routes.js";
 import notificationRoutes from "./modules/notification/notification.routes.js";
 import alertRoutes from "./modules/alert/alert.routes.js";
 import machineRoutes from "./modules/machines/machine.routes.js";

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="client/public/logo.png" width="120" />
+  <img src="client/public/logo2.png" width="180" />
 </p>
 
 <h1 align="center">SagX</h1>
@@ -8,17 +8,27 @@
   Full stack mission management system with real time collaboration and strict workflow enforcement
 </p>
 
+<br>
+
+<p align="center">
+  A structured enterprise style system where missions, machines, and resources follow strict operational rules before execution
+</p>
+
 ---
+
+<br>
 
 ## 🚀 Overview
 
 SagX is a full stack mission management platform designed for organizations that need structured, rule based workflows instead of manual task coordination.
 
-It simulates real operational environments where missions, machines, and resources must follow strict rules before execution.
+It simulates real operational environments where missions, machines, and resources must follow strict validation rules before execution.
 
 The system also includes real time communication features to support collaboration between users.
 
 ---
+
+<br>
 
 ## ✨ Features
 
@@ -33,9 +43,13 @@ The system also includes real time communication features to support collaborati
 
 ---
 
+<br>
+
 ## ⚙️ Workflow Engine
 
 SagX enforces strict operational rules similar to real enterprise systems.
+
+<br>
 
 • Missions cannot start without required materials  
 • Missing materials block execution and require manager intervention  
@@ -45,6 +59,8 @@ SagX enforces strict operational rules similar to real enterprise systems.
 
 ---
 
+<br>
+
 ## 📡 Real Time System
 
 • WebSocket based communication  
@@ -53,6 +69,8 @@ SagX enforces strict operational rules similar to real enterprise systems.
 • Instant synchronization across the application  
 
 ---
+
+<br>
 
 ## 📞 Communication System
 
@@ -64,6 +82,8 @@ SagX enforces strict operational rules similar to real enterprise systems.
 
 ---
 
+<br>
+
 ## 🧠 State Management
 
 • Zustand handles global application state  
@@ -73,6 +93,8 @@ SagX enforces strict operational rules similar to real enterprise systems.
 
 ---
 
+<br>
+
 ## 🛠 Tech Stack
 
 Frontend  
@@ -81,12 +103,18 @@ Frontend
 • Tailwind CSS  
 • Zustand  
 
+<br>
+
 Backend  
 • Node.js  
 • Express.js  
 
+<br>
+
 Database  
 • MongoDB  
+
+<br>
 
 Real Time  
 • Socket.io  
@@ -94,6 +122,8 @@ Real Time
 • WebRTC  
 
 ---
+
+<br>
 
 ## 🎯 Purpose
 
@@ -108,6 +138,8 @@ SagX simulates real enterprise systems where:
 It reflects how internal operational tools work in logistics, telecom, and field service environments.
 
 ---
+
+<br>
 
 ## 📌 Status
 

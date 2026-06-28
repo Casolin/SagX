@@ -117,4 +117,4 @@ SagX simulates real enterprise systems where:
 
 <h2><b>STATUS</b></h2>
 
-Active development as part of a full stack engineering portfolio project.
+Built as part of a full stack portfolio project and continuously improved.

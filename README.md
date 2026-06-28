@@ -2,102 +2,81 @@
   <img src="client/public/logo2.png" width="180" />
 </p>
 
-<h1 align="center">SagX</h1>
+<h1 align="center"><b>SagX</b></h1>
 
 <p align="center">
-  Full stack mission management system with real time collaboration and strict workflow enforcement
-</p>
-
-<br>
-
-<p align="center">
-  A structured enterprise style system where missions, machines, and resources follow strict operational rules before execution
+  <b>Full Stack Mission Management System</b><br>
+  Real time collaboration • Workflow enforcement • Enterprise style operations
 </p>
 
 ---
-
-<br>
 
 ## 🚀 Overview
 
-SagX is a full stack mission management platform designed for organizations that need structured, rule based workflows instead of manual task coordination.
+SagX is a full stack mission management platform designed for structured enterprise workflows.
 
-It simulates real operational environments where missions, machines, and resources must follow strict validation rules before execution.
+It replaces manual coordination with a system where everything is controlled by rules, validation, and real time synchronization.
 
-The system also includes real time communication features to support collaboration between users.
+The system simulates real operational environments where missions, machines, and resources must be validated before execution.
 
 ---
-
-<br>
 
 ## ✨ Features
 
-• Secure authentication system  
-• Two Factor Authentication (2FA)  
-• Refresh token session management  
-• Mission and task management system  
-• Real time chat system  
-• Voice and video calls  
-• Screen sharing support  
-• Role based access control  
+• <b>Secure Authentication System</b>  
+• <b>Two Factor Authentication (2FA)</b>  
+• <b>Refresh Token Session Management</b>  
+• <b>Mission & Task Management System</b>  
+• <b>Real Time Chat System</b>  
+• <b>Voice & Video Calling</b>  
+• <b>Screen Sharing Support</b>  
+• <b>Role Based Access Control</b>  
 
 ---
 
-<br>
-
 ## ⚙️ Workflow Engine
 
-SagX enforces strict operational rules similar to real enterprise systems.
-
-<br>
+<b>SagX enforces strict operational rules:</b>
 
 • Missions cannot start without required materials  
-• Missing materials block execution and require manager intervention  
-• Machine status cannot be set to “down” without a valid alert  
+• Missing materials block execution and require manager approval  
+• Machine status cannot be changed to “down” without a valid alert  
 • Technicians must contact managers when resources are missing  
 • All actions are validated before execution  
 
 ---
 
-<br>
-
 ## 📡 Real Time System
 
-• WebSocket based communication  
+• WebSocket based communication layer  
 • Live chat between users  
 • Real time alerts for missions, machines, and materials  
-• Instant synchronization across the application  
+• Instant synchronization across the system  
 
 ---
-
-<br>
 
 ## 📞 Communication System
 
-• WebRTC based voice and video calls  
+• WebRTC voice and video calls  
 • Zustand global call state management  
 • Users cannot receive multiple calls at the same time  
 • Calls are blocked when user is already in a session  
-• In call controls: mute, camera, screen share, minimize  
+• In call controls (mute, camera, screen share, minimize)  
 
 ---
-
-<br>
 
 ## 🧠 State Management
 
 • Zustand handles global application state  
-• Manages call and session state across the system  
-• Ensures real time synchronization between modules  
-• Keeps UI consistent across all features  
+• Centralized call + session management  
+• Real time synchronization across modules  
+• Consistent UI behavior across the system  
 
 ---
 
-<br>
-
 ## 🛠 Tech Stack
 
-Frontend  
+<b>Frontend</b>  
 • React  
 • TypeScript  
 • Tailwind CSS  
@@ -105,42 +84,42 @@ Frontend
 
 <br>
 
-Backend  
+<b>Backend</b>  
 • Node.js  
 • Express.js  
 
 <br>
 
-Database  
+<b>Database</b>  
 • MongoDB  
 
 <br>
 
-Real Time  
+<b>Real Time Layer</b>  
 • Socket.io  
 • WebSockets  
 • WebRTC  
 
 ---
 
-<br>
-
 ## 🎯 Purpose
 
 SagX simulates real enterprise systems where:
 
-• tasks depend on resource availability  
-• machine states depend on system alerts  
-• actions follow strict business rules  
-• communication is embedded into workflows  
-• real time coordination is required between users  
-
-It reflects how internal operational tools work in logistics, telecom, and field service environments.
+• Tasks depend on resource availability  
+• Machine states depend on system alerts  
+• Actions follow strict business rules  
+• Communication is embedded into workflows  
+• Real time coordination is required between users  
 
 ---
 
-<br>
-
 ## 📌 Status
 
-Active development as part of a full stack engineering portfolio project.
+<b>Active development</b> as part of a full stack engineering portfolio project.
+
+---
+
+## ⚠️ Note
+
+Some features are implemented in demo form and will be further optimized for production readiness.

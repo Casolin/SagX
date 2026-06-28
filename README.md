@@ -2,92 +2,150 @@
 
 SagX is a full stack mission management platform built for organizations that need structured and rule based workflows instead of manual task coordination.
 
-It also includes real time communication tools like chat, voice and video calls, and screen sharing to help users work together inside the same system.
+It also includes real time communication features like chat, voice and video calls, and screen sharing to support collaboration inside the system.
 
 ---
+
+<br>
 
 ## ✨ Features
 
+<br>
+
 🔐 Secure authentication system  
+<br>
 🔑 Two Factor Authentication  
+<br>
 🔄 Refresh token session management  
+<br>
 📋 Mission and task management system  
+<br>
 💬 Real time chat  
+<br>
 📞 Voice and video calls  
+<br>
 🖥️ Screen sharing  
-👥 Role based access control
+<br>
+👥 Role based access control  
 
 ---
 
-## ⚙️ How the system actually works
+<br>
 
-SagX is not just CRUD. It follows real workflow rules.
+## ⚙️ How the system works
+
+<br>
+
+SagX is not a simple CRUD app. It enforces real workflow logic.
+
+<br>
 
 📦 A mission cannot start if required materials are missing  
-🚫 If materials are missing the system blocks the action and requires manager involvement  
-⚠️ A machine cannot be marked as down unless there is a real alert for it  
-🧑‍🔧 Technicians must contact managers when something is missing before continuing  
-🔁 Everything is validated in real time before actions are accepted
+<br>
+🚫 Missing materials block execution and require manager action  
+<br>
+⚠️ A machine cannot be marked as down without a valid alert  
+<br>
+🧑‍🔧 Technicians must contact managers when resources are missing  
+<br>
+🔁 Every action is validated before it is accepted by the system  
 
 ---
+
+<br>
 
 ## 📡 Real time system
 
-🌐 WebSocket based communication across the app  
+<br>
+
+🌐 WebSocket communication across the platform  
+<br>
 💬 Live chat between users  
+<br>
 🔔 Real time alerts for missions, machines and materials  
-⚡ Instant updates without refreshing the page
+<br>
+⚡ Instant updates without page refresh  
 
 ---
+
+<br>
 
 ## 📞 Call system
 
+<br>
+
 📞 Voice and video calls using WebRTC  
-🧠 Global call state handled with Zustand  
-🚫 A user cannot receive another call while already in one  
-📵 Calls are blocked if the user is busy  
-🎛️ In call controls like mute, camera toggle, screen share, and minimize
+<br>
+🧠 Global call state managed with Zustand  
+<br>
+🚫 Users cannot receive multiple calls at the same time  
+<br>
+📵 Calls are blocked when a user is busy  
+<br>
+🎛️ In call controls like mute, camera, screen share and minimize  
 
 ---
+
+<br>
 
 ## 🧠 State management
 
+<br>
+
 Zustand is used for global state across the app.
 
-It handles call state, session state and real time synchronization between different parts of the system so everything stays consistent.
+It keeps call state, session state and real time updates in sync so everything behaves consistently across the system.
 
 ---
 
+<br>
+
 ## 🛠️ Tech stack
+
+<br>
 
 Frontend  
 React  
 TypeScript  
 Tailwind CSS  
-Zustand
+Zustand  
+
+<br>
 
 Backend  
 Node.js  
-Express
+Express  
+
+<br>
 
 Database  
-MongoDB
+MongoDB  
+
+<br>
 
 Real time  
 Socket.io  
 WebSockets  
-WebRTC
+WebRTC  
 
 ---
+
+<br>
 
 ## 🎯 Purpose
 
-The goal of SagX is to simulate how real enterprise systems work where everything depends on rules, resources and coordination between users.
+<br>
 
-It reflects real internal tools used in industrial and operational environments where you cannot just click and execute anything without validation.
+SagX simulates real enterprise systems where everything depends on rules, resources and coordination between users.
+
+It represents how internal tools work in real companies where actions must be validated and cannot happen freely without constraints.
 
 ---
 
+<br>
+
 ## 📌 Status
+
+<br>
 
 Still being improved as part of a full stack portfolio project.
